@@ -58,4 +58,1415 @@
       <div class="mb-5">
         <label class="block text-xs font-bold text-emerald-300 mb-2">2. اختر الشعبة الدراسية:</label>
         <div class="grid grid-cols-3 gap-2.5">
-          <button type="button" onclick="selectLoginClass('السابع 6', this)" class="lclass-btn p
+          <button type="button" onclick="selectLoginClass('السابع 6', this)" class="lclass-btn p-3 rounded-xl bg-emerald-600/30 border-2 border-emerald-400 text-white font-extrabold text-sm">السابع 6</button>
+          <button type="button" onclick="selectLoginClass('السابع 5', this)" class="lclass-btn p-3 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-300 font-extrabold text-sm">السابع 5</button>
+          <button type="button" onclick="selectLoginClass('السابع 4', this)" class="lclass-btn p-3 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-300 font-extrabold text-sm">السابع 4</button>
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <label class="block text-xs font-bold text-amber-300 mb-2">3. نمط التشغيل الميداني:</label>
+        <div class="grid grid-cols-2 gap-2.5">
+          <button type="button" onclick="selectMode('NFC / يدوي', this)" class="mode-btn p-3 rounded-xl bg-amber-500/25 border-2 border-amber-400 text-white font-bold text-sm">📡 وضع NFC / اللمس السريع</button>
+          <button type="button" onclick="selectMode('رقمي وصوتي', this)" class="mode-btn p-3 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-300 font-bold text-sm">🎙️ الوضع الصوتي الذكي</button>
+        </div>
+      </div>
+
+      <button type="button" onclick="enterPlatform()" class="w-full py-4 rounded-2xl bg-gradient-to-l from-emerald-500 via-teal-500 to-sky-600 hover:opacity-95 text-white font-black text-lg shadow-lg transition">
+        🚀 دخول إلى المنصة
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== واجهة المنصة الرئيسية ==================== -->
+  <div id="mainApp" class="hidden flex-col min-h-screen">
+
+    <!-- الشريط العلوي -->
+    <header class="sticky top-0 z-40 bg-[#090E1A]/95 backdrop-blur-md border-b border-slate-800 px-3 py-2.5">
+      <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <span class="font-black text-sky-400 text-base md:text-lg">MathPulse AI 3.0</span>
+          <span id="roleBadge" class="px-2.5 py-0.5 rounded-lg bg-sky-500/20 border border-sky-400/40 text-sky-300 text-xs font-bold">معلم</span>
+          <span id="syncBadge" class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-xs font-bold pulse-live">🔒 مزامنة محمية</span>
+        </div>
+
+        <div class="flex items-center gap-1.5" id="topClassSwitcher">
+          <button onclick="switchClass('السابع 6')" data-cls="السابع 6" class="top-cls-btn px-3 py-1 rounded-lg text-xs font-extrabold bg-emerald-600 text-white">السابع 6</button>
+          <button onclick="switchClass('السابع 5')" data-cls="السابع 5" class="top-cls-btn px-3 py-1 rounded-lg text-xs font-extrabold bg-slate-800 text-slate-300">السابع 5</button>
+          <button onclick="switchClass('السابع 4')" data-cls="السابع 4" class="top-cls-btn px-3 py-1 rounded-lg text-xs font-extrabold bg-slate-800 text-slate-300">السابع 4</button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div class="flex items-center gap-1.5 bg-slate-900 border border-amber-500/40 px-2.5 py-1 rounded-xl">
+            <span class="text-xs text-amber-300 font-bold">⏳ الحصة:</span>
+            <span id="lessonTimerDisplay" class="font-mono font-black text-sm text-white">40:00</span>
+            <button onclick="startLessonTimer()" class="px-2 py-0.5 rounded bg-emerald-600 text-white text-[11px] font-bold">ابدأ</button>
+            <button onclick="resetLessonTimer()" class="px-2 py-0.5 rounded bg-rose-600/80 text-white text-[11px] font-bold">ضبط</button>
+          </div>
+          <button onclick="activateNfcReader()" class="px-2.5 py-1.5 rounded-xl bg-pink-600/25 border border-pink-500/50 text-pink-200 text-xs font-bold">📡 NFC</button>
+          <button onclick="exportExcel()" class="px-2.5 py-1.5 rounded-xl bg-emerald-600/25 border border-emerald-500/50 text-emerald-200 text-xs font-bold">📥 Excel</button>
+          <button onclick="logoutPlatform()" class="px-2.5 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 text-xs font-bold">خروج</button>
+        </div>
+      </div>
+
+      <!-- التبويبات السبعة -->
+      <nav class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto no-scrollbar pt-2.5 mt-2 border-t border-slate-800/80">
+        <button onclick="openTab('tabRadar', this)" class="tab-btn px-3.5 py-2 rounded-xl bg-slate-800/90 border border-slate-700 text-xs md:text-sm font-bold text-slate-200">🚪 رادار الفصول</button>
+        <button onclick="openTab('tabStudents', this)" class="tab-btn active px-3.5 py-2 rounded-xl bg-slate-800/90 border border-slate-700 text-xs md:text-sm font-bold text-slate-200">💳 بطاقات الطلاب</button>
+        <button onclick="openTab('tabCambridge', this)" class="tab-btn px-3.5 py-2 rounded-xl bg-slate-800/90 border border-slate-700 text-xs md:text-sm font-bold text-slate-200">🧠 سابع كامبردج والعلاج</button>
+        <button onclick="openTab('tabCorrector', this)" class="tab-btn px-3.5 py-2 rounded-xl bg-slate-800/90 border border-slate-700 text-xs md:text-sm font-bold text-slate-200">✅ مصحح الواجب البصري</button>
+        <button onclick="openTab('tabKnights', this)" class="tab-btn px-3.5 py-2 rounded-xl bg-slate-800/90 border border-slate-700 text-xs md:text-sm font-bold text-slate-200">🏆 فرسان الرياضيات والشهادات</button>
+        <button onclick="openTab('tabMinute', this)" class="tab-btn px-3.5 py-2 rounded-xl bg-slate-800/90 border border-slate-700 text-xs md:text-sm font-bold text-slate-200">⏱️ الدقيقة المحفزة</button>
+        <button onclick="openTab('tabAdmin', this)" class="tab-btn px-3.5 py-2 rounded-xl bg-slate-800/90 border border-slate-700 text-xs md:text-sm font-bold text-slate-200">⚙️ الأسماء والصور والسحابة</button>
+      </nav>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-3 md:p-5">
+
+      <!-- ==================== 1. رادار الفصول ==================== -->
+      <section id="tabRadar" class="tab-panel hidden space-y-5">
+        <div class="glass-card p-5">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+            <div>
+              <h2 class="text-xl font-black text-sky-400">🚪 رادار إشغال الفصول الذكي</h2>
+              <p class="text-xs text-slate-400">اضغط على بطاقة الفصل لتبديل حالة الإشغال لحظياً أمام الإدارة والزوار</p>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-sky-500/15 border border-sky-400/30 text-xs text-sky-300 font-bold">مزامنة مباشرة</span>
+          </div>
+          <div id="radarRoomsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+        </div>
+
+        <div class="glass-card p-5">
+          <h3 class="text-lg font-extrabold text-emerald-400 mb-3">📊 مؤشرات الأداء والتفاعل اللحظي للشعب</h3>
+          <div id="radarAnalyticsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+        </div>
+      </section>
+
+      <!-- ==================== 2. بطاقات الطلاب ==================== -->
+      <section id="tabStudents" class="tab-panel space-y-4">
+        <div class="glass-card p-4 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-extrabold text-sky-300">شعبة:</span>
+              <span id="activeClassHeader" class="px-3 py-1 rounded-lg bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 font-black text-sm">السابع 6</span>
+              <span id="classEngagementBadge" class="px-3 py-1 rounded-lg bg-amber-500/20 border border-amber-400/40 text-amber-300 font-bold text-xs">نسبة التفاعل: 0%</span>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" id="voiceBtn" onclick="startVoiceRecognition()" class="px-4 py-2 rounded-xl bg-gradient-to-l from-indigo-600 to-purple-600 hover:opacity-95 text-white font-extrabold text-xs md:text-sm shadow">
+                🎙️ مناداة صوتية (الاسم أو الرقم)
+              </button>
+              <button type="button" onclick="stopVoiceRecognition()" class="px-2.5 py-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 text-xs font-bold">⏹️ إيقاف</button>
+              <span id="voiceStatus" class="text-xs text-purple-300 font-semibold">جاهز للاستماع...</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2" id="actionPills">
+            <button type="button" onclick="selectAction('حضور', 1, this)" class="action-pill selected p-2.5 rounded-xl bg-emerald-600/30 border-2 border-emerald-400 text-white font-bold text-xs text-center">✅ حضور (+1)</button>
+            <button type="button" onclick="selectAction('عبقري الرياضيات', 2, this)" class="action-pill p-2.5 rounded-xl bg-amber-500/25 border border-amber-400/50 text-amber-200 font-bold text-xs text-center">🏆 عبقري (+2)</button>
+            <button type="button" onclick="selectAction('قناص التركيز', 1, this)" class="action-pill p-2.5 rounded-xl bg-sky-500/25 border border-sky-400/50 text-sky-200 font-bold text-xs text-center">🎯 تركيز (+1)</button>
+            <button type="button" onclick="selectAction('كسر جمود', 2, this)" class="action-pill p-2.5 rounded-xl bg-cyan-500/25 border border-cyan-400/50 text-cyan-200 font-bold text-xs text-center">🌊 كسر جمود (+2)</button>
+            <button type="button" onclick="selectAction('تنبيه صامت', 0, this)" class="action-pill p-2.5 rounded-xl bg-yellow-500/25 border border-yellow-400/50 text-yellow-200 font-bold text-xs text-center">🟨 تنبيه صامت</button>
+            <button type="button" onclick="selectAction('تراجع نقطة', -1, this)" class="action-pill p-2.5 rounded-xl bg-rose-500/25 border border-rose-400/50 text-rose-200 font-bold text-xs text-center">🔻 خصم (-1)</button>
+          </div>
+        </div>
+
+        <div id="studentsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3"></div>
+      </section>
+
+      <!-- ==================== 3. سابع كامبردج والبرامج العلاجية ==================== -->
+      <section id="tabCambridge" class="tab-panel hidden space-y-5">
+        <div class="glass-card p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h2 class="text-xl font-black text-purple-400">🧠 بنك سابع كامبردج — منهج الفصل الدراسي الأول كاملاً</h2>
+              <p class="text-xs text-slate-400">جميع الوحدات الثمانية (36 درساً) جاهزة بمسائل التمايز والحلول النموذجية والعرض السبوري</p>
+            </div>
+            <button type="button" onclick="openBoardModal()" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-xs shadow">
+              🖥️ عرض المسائل على السبورة بملء الشاشة
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="md:col-span-2">
+              <label class="block text-xs font-bold text-slate-300 mb-1.5">اختر الوحدة والدرس من كتاب الطالب (الفصل الأول):</label>
+              <select id="cambridgeLessonSelect" onchange="onLessonChanged()" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm font-bold focus:border-purple-400 outline-none"></select>
+            </div>
+            <div class="flex items-end">
+              <button type="button" onclick="onLessonChanged()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-l from-purple-600 to-indigo-600 text-white font-extrabold text-sm shadow">
+                ✨ تحديث مسائل الدرس والعلاج
+              </button>
+            </div>
+          </div>
+
+          <div id="differentiatedCards" class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2"></div>
+        </div>
+
+        <div class="glass-card p-5 space-y-4 border border-amber-500/40">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h3 class="text-lg font-black text-amber-400">🩺 البرامج العلاجية الفورية للطلاب المتعثرين في (<span class="adminClsName">السابع 6</span>)</h3>
+              <p class="text-xs text-slate-300">يتم تحديث هذه القائمة تلقائياً بناءً على نقاط التفاعل وأخطاء الواجبات، مع نشاط علاجي ورسالة واتساب فورية</p>
+            </div>
+            <span id="remedialCountBadge" class="px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/50 text-amber-300 text-xs font-black">0 طلاب بحاجة لدعم</span>
+          </div>
+          <div id="remedialList" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+        </div>
+      </section>
+
+      <!-- ==================== 4. مصحح الواجب البصري (كاميرا محلية 0 بيانات — بحد أقصى 5 طلاب في النشاط) ==================== -->
+      <section id="tabCorrector" class="tab-panel hidden space-y-5">
+        <div class="glass-card p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h2 class="text-xl font-black text-cyan-400">✅ المصحح البصري للنشاط والواجب (عرض مباشر على الشاشة — 0 بيانات)</h2>
+              <p class="text-xs text-slate-400">يعرض دفتر الطالب بالكاميرا المحلية ويضع علامات (✓ / ✗) بصرية أمام الفصل بحد أقصى 5 طلاب في النشاط</p>
+            </div>
+
+            <div class="flex items-center gap-2 bg-slate-900 border border-amber-400/50 px-3 py-1.5 rounded-xl">
+              <span class="text-xs font-bold text-amber-300">📊 طلاب النشاط الحالي:</span>
+              <span id="batchCountText" class="font-black text-sm text-white">0 / 5</span>
+              <button type="button" onclick="resetBatchCounter()" class="px-2.5 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-[11px] font-extrabold">نشاط جديد</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">1. اختر الطالب:</label>
+              <select id="correctorStudentSelect" onchange="renderHomeworkRubric()" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm font-bold"></select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">2. اختر درس النشاط أو الواجب:</label>
+              <select id="correctorTopicSelect" onchange="renderHomeworkRubric()" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm font-bold"></select>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-950/90 border-2 border-sky-500/40 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex flex-wrap items-center gap-2">
+                <button type="button" onclick="startLiveCamera()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs">📷 تشغيل الكاميرا (مباشر)</button>
+                <button type="button" onclick="captureNotebookFrame()" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs">📸 تثبيت لقطة الدفتر</button>
+                <button type="button" onclick="stopLiveCamera()" class="px-3 py-2 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs">⏹️ إيقاف الكاميرا</button>
+              </div>
+
+              <div class="flex items-center gap-1.5 bg-slate-900 p-1.5 rounded-xl border border-slate-700">
+                <span class="text-[11px] text-slate-400 px-1 font-bold">اختر العلامة والمس الشاشة:</span>
+                <button type="button" onclick="setStampTool('✓', '#10B981', this)" class="stamp-tool-btn px-3 py-1 rounded-lg bg-emerald-600 text-white font-black text-sm border-2 border-white">✓ صح</button>
+                <button type="button" onclick="setStampTool('✗', '#EF4444', this)" class="stamp-tool-btn px-3 py-1 rounded-lg bg-rose-600/40 text-rose-200 font-black text-sm border border-rose-500/50">✗ خطأ</button>
+                <button type="button" onclick="setStampTool('⭕', '#F59E0B', this)" class="stamp-tool-btn px-3 py-1 rounded-lg bg-amber-500/30 text-amber-200 font-black text-sm border border-amber-400/50">⭕ انتبه</button>
+                <button type="button" onclick="undoLastStamp()" class="px-2.5 py-1 rounded-lg bg-slate-700 text-white text-xs font-bold">↩️ تراجع</button>
+                <button type="button" onclick="clearAllStamps()" class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 text-xs font-bold">مسح</button>
+              </div>
+            </div>
+
+            <div id="visualStage" onclick="placeStampOnStage(event)" class="relative w-full min-h-[260px] md:min-h-[340px] rounded-2xl bg-slate-900 border-2 border-dashed border-slate-700 overflow-hidden flex items-center justify-center cursor-crosshair select-none">
+              <video id="liveCameraVideo" autoplay playsinline muted class="hidden w-full max-h-[420px] object-contain"></video>
+              <canvas id="capturedNotebookCanvas" class="hidden w-full max-h-[420px] object-contain"></canvas>
+              <div id="cameraPlaceholder" class="text-center p-6 space-y-2 pointer-events-none">
+                <div class="text-4xl">📷</div>
+                <p class="text-sm font-extrabold text-sky-300">اضغط «تشغيل الكاميرا» لعرض دفتر الطالب على الشاشة أمام الفصل</p>
+                <p class="text-xs text-slate-400">يعمل محلياً داخل الجهاز بدون استهلاك أي بيانات إنترنت — المس الشاشة في أي مكان لوضع علامة (✓) أو (✗)</p>
+              </div>
+              <div id="stampsLayer" class="absolute inset-0 pointer-events-none"></div>
+            </div>
+          </div>
+
+          <div id="homeworkRubricBox" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-slate-800"></div>
+        </div>
+      </section>
+
+      <!-- ==================== 5. فرسان الرياضيات والشهادات ==================== -->
+      <section id="tabKnights" class="tab-panel hidden space-y-5">
+        <div class="glass-card p-6 text-center space-y-6">
+          <div>
+            <h2 class="text-2xl md:text-3xl font-black text-amber-400">🏆 منصة تتويج فرسان الرياضيات وشهادات التقدير</h2>
+            <p class="text-xs md:text-sm text-slate-300 mt-1">أبطال التفاعل والتميز في شعبة <span id="knightsClassLabel" class="text-emerald-400 font-bold">السابع 6</span> — اضغط لإصدار شهادة تقدير فورية</p>
+          </div>
+          <div id="podiumGrid" class="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-4xl mx-auto items-end"></div>
+        </div>
+      </section>
+
+      <!-- ==================== 6. الدقيقة المحفزة ==================== -->
+      <section id="tabMinute" class="tab-panel hidden">
+        <div class="glass-card p-6 max-w-3xl mx-auto text-center space-y-5">
+          <h2 class="text-2xl font-black text-sky-400">⏱️ الدقيقة المحفزة (الأولى والأخيرة)</h2>
+          <p class="text-xs text-slate-400">إدارة الدقائق الذهبية للحصة بعبارات تحفيزية ومهام صفية واضحة على الشاشة</p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-right">
+            <button type="button" onclick="startMinuteTimer('first')" class="p-4 rounded-2xl bg-emerald-600/25 border-2 border-emerald-400 hover:bg-emerald-600/35 transition">
+              <div class="font-black text-base text-emerald-300 mb-1">▶️ الدقيقة الأولى (تهيئة وانطلاق)</div>
+              <p class="text-xs text-slate-200">تجهيز الأدوات، فتح الدفتر، وحل تحدي الإحماء السريع خلال 60 ثانية.</p>
+            </button>
+            <button type="button" onclick="startMinuteTimer('last')" class="p-4 rounded-2xl bg-amber-500/25 border-2 border-amber-400 hover:bg-amber-500/35 transition">
+              <div class="font-black text-base text-amber-300 mb-1">🏁 الدقيقة الأخيرة (غلق وتلخيص)</div>
+              <p class="text-xs text-slate-200">تذكرة الخروج: لخّص قاعدة الدرس في جملة واحدة قبل رنين الجرس.</p>
+            </button>
+          </div>
+
+          <div id="minuteTimerDisplay" class="text-6xl md:text-7xl font-mono font-black text-emerald-400 py-2">01:00</div>
+
+          <div id="minuteMotivationCard" class="p-5 rounded-2xl bg-gradient-to-l from-indigo-950/90 to-slate-900 border-2 border-sky-400/50 space-y-2">
+            <span id="minutePhaseBadge" class="inline-block px-3 py-0.5 rounded-full bg-sky-500/20 text-sky-300 text-xs font-extrabold">جاهز للانطلاق</span>
+            <h3 id="minuteQuoteTitle" class="text-lg md:text-xl font-black text-white">«العباقرة لا يولدون هكذا، بل يصنعون تفوقهم بالتركيز في كل دقيقة!»</h3>
+            <p id="minuteTaskDesc" class="text-xs md:text-sm text-amber-300 font-bold">اختر (الدقيقة الأولى) أو (الدقيقة الأخيرة) لبدء العد التنازلي وعرض التحدي الصفي.</p>
+          </div>
+
+          <div class="flex justify-center gap-3">
+            <button type="button" onclick="cycleMotivationQuote()" class="px-4 py-2.5 rounded-xl bg-purple-600 text-white font-bold text-xs">🔄 تغيير العبارة المحفزة</button>
+            <button type="button" onclick="stopMinuteTimer()" class="px-4 py-2.5 rounded-xl bg-slate-700 text-white font-bold text-xs">⏹️ إيقاف المؤقت</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 7. الأسماء والصور والسحابة ==================== -->
+      <section id="tabAdmin" class="tab-panel hidden space-y-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="glass-card p-5 space-y-3">
+            <h3 class="text-lg font-black text-emerald-400">1. زرع الأسماء من Excel (شعبة: <span class="adminClsName">السابع 6</span>)</h3>
+            <p class="text-xs text-slate-400">الصق عمود (الرقم + الاسم) من Excel مباشرة؛ يرتب النظام الأرقام تلقائياً</p>
+            <textarea id="excelPasteBox" rows="6" placeholder="1 أحمد محمد...&#10;2 سالم علي..." class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs"></textarea>
+            <div class="flex gap-2">
+              <button type="button" onclick="importStudentsFromText(true)" class="flex-1 py-2.5 rounded-xl bg-emerald-600 text-white font-extrabold text-xs">🔄 زرع واستبدال الشعبة</button>
+              <button type="button" onclick="importStudentsFromText(false)" class="flex-1 py-2.5 rounded-xl bg-sky-600 text-white font-extrabold text-xs">➕ إضافة للقائمة</button>
+            </div>
+          </div>
+
+          <div class="glass-card p-5 space-y-3">
+            <h3 class="text-lg font-black text-amber-400">2. ربط مجلد الصور (عزل المنقطعين تلقائياً)</h3>
+            <p class="text-xs text-slate-400">اختر مجلد صور الشعبة؛ يطابق النظام أرقام الصور مع أرقام الطلاب ويعزل أي رقم غير موجود في الكشف</p>
+            <input type="file" id="folderPhotoInput" webkitdirectory directory multiple accept="image/*" onchange="handlePhotoUpload(event)" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-300" />
+            <input type="file" id="multiPhotoInput" multiple accept="image/*" onchange="handlePhotoUpload(event)" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-300" />
+            <div id="isolatedPhotosBox" class="hidden p-3 rounded-xl bg-amber-500/15 border border-amber-400/50 text-xs text-amber-200"></div>
+          </div>
+        </div>
+
+        <div class="glass-card p-5 space-y-3 border border-purple-500/40">
+          <h3 class="text-lg font-black text-purple-400">🔒 3. السحابة المحمية (Firebase Realtime Sync)</h3>
+          <p class="text-xs text-slate-400">المسار السري المحمي: <code class="text-emerald-300">Mansour2026Secret</code> — مزامنة تلقائية متوافقة بالكامل مع قاعدة البيانات</p>
+          <div class="flex flex-wrap gap-3">
+            <button type="button" onclick="pushToFirebase(true)" class="px-5 py-3 rounded-xl bg-gradient-to-l from-purple-600 to-indigo-600 text-white font-extrabold text-sm shadow">
+              🔄 مزامنة فورية مع السحابة المحمية
+            </button>
+            <button type="button" onclick="pullFromFirebase(true)" class="px-5 py-3 rounded-xl bg-slate-800 border border-sky-500/40 text-sky-300 font-extrabold text-sm">
+              ⬇️ جلب أحدث نسخة من السحابة
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- نافذة السبورة الذكية -->
+  <div id="boardModal" class="fixed inset-0 z-50 hidden bg-slate-950/95 p-4 md:p-8 flex flex-col justify-between overflow-y-auto">
+    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+      <h2 id="boardLessonTitle" class="text-xl md:text-2xl font-black text-sky-400">الدرس</h2>
+      <div class="flex gap-2">
+        <button type="button" onclick="toggleBoardAnswers()" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-extrabold text-xs md:text-sm">👁️ إظهار / إخفاء الحلول النموذجية</button>
+        <button type="button" onclick="closeBoardModal()" class="px-4 py-2 rounded-xl bg-rose-600 text-white font-extrabold text-xs md:text-sm">✖ إغلاق السبورة</button>
+      </div>
+    </div>
+    <div id="boardQuestionsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6 my-auto py-6"></div>
+  </div>
+
+  <!-- نافذة شهادة التقدير -->
+  <div id="certificateModal" class="fixed inset-0 z-50 hidden bg-black/80 p-4 flex items-center justify-center overflow-y-auto">
+    <div class="bg-white text-slate-900 max-w-3xl w-full rounded-2xl p-6 md:p-10 border-8 border-double border-amber-500 shadow-2xl space-y-6 text-center relative" id="certificatePrintArea">
+      <div class="border-2 border-sky-700 rounded-xl p-6 md:p-8 space-y-5">
+        <div class="flex justify-between items-center text-xs font-bold text-slate-600">
+          <span>سلطنة عُمان — وزارة التربية والتعليم</span>
+          <span>منصة MathPulse AI 3.0</span>
+        </div>
+        <div class="text-4xl">🏆</div>
+        <h2 class="text-3xl md:text-4xl font-black text-sky-900">شهادة شكر وتقدير وتميّز</h2>
+        <p class="text-base md:text-lg text-slate-700 font-semibold">تُمنح هذه الشهادة بكل فخر واعتزاز إلى فارس الرياضيات الطالب:</p>
+        <div id="certStudentName" class="text-2xl md:text-3xl font-black text-emerald-700 py-2 border-b-2 border-amber-400 inline-block px-8">اسم الطالب</div>
+        <p class="text-sm md:text-base text-slate-700 leading-relaxed max-w-xl mx-auto">
+          المقيد بالصف <strong id="certClassName">السابع 6</strong>، وذلك نظير تفوقه العلمي وتفاعله المتميز وانضباطه المثالي في مادة الرياضيات (منهج كامبردج)، وحصوله على <strong id="certPoints">0</strong> نقاط تميز.
+        </p>
+        <div class="flex justify-between items-end pt-6 text-sm font-bold text-slate-800">
+          <div>
+            <p>التاريخ: <span id="certDate"></span></p>
+          </div>
+          <div>
+            <p>معلم المادة: أ. محمد منصور</p>
+            <p class="text-xs text-emerald-700 mt-1">التوقيع الرقمي المعتمد ✓</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-center gap-3 pt-2 print:hidden">
+        <button type="button" onclick="window.print()" class="px-6 py-2.5 rounded-xl bg-emerald-600 text-white font-extrabold text-sm">🖨️ طباعة / حفظ الشهادة PDF</button>
+        <button type="button" onclick="closeCertificateModal()" class="px-6 py-2.5 rounded-xl bg-slate-800 text-white font-extrabold text-sm">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastBox" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 hidden px-5 py-3 rounded-2xl bg-slate-900 border-2 border-emerald-400 text-white font-bold text-sm shadow-2xl"></div>
+
+  <script>
+    const FIREBASE_DB_URL = "https://mathpulse-d95bf-default-rtdb.firebaseio.com/Mansour2026Secret.json";
+
+    const session = {
+      role: 'معلم',
+      currentClass: 'السابع 6',
+      mode: 'NFC / يدوي',
+      selectedAction: 'حضور',
+      selectedPoints: 1
+    };
+
+    let sharedData = {
+      students: [],
+      rooms: {
+        'السابع 6': { active: true, teacher: 'أ. محمد منصور' },
+        'السابع 5': { active: false, teacher: 'شاغر' },
+        'السابع 4': { active: false, teacher: 'شاغر' }
+      },
+      updatedAt: 0
+    };
+
+    const CAMBRIDGE_TERM1_CURRICULUM = [
+      {
+        unit: "الوحدة 1: الأعداد الصحيحة والقوى والجذور",
+        lessons: [
+          { id: "u1_1", title: "1-1 الأعداد الموجهة (جمع وطرح الأعداد الصحيحة)", f: { q: "احسب ناتج: (-5) + (+8)", a: "+3" }, ap: { q: "احسب ناتج: (-7) - (-4)", a: "-3" }, ch: { q: "درجة الحرارة ليلاً -4°س وارتفعت 11°س ثم انخفضت 3°س، كم أصبحت؟", a: "+4°س" }, steps: ["تحديد إشارتي العددين بدقة", "تحويل طرح السالب (- -) إلى جمع (+)", "إجراء العملية الحسابية ووضع إشارة الأكبر"], error: "الخطأ الشائع: جمع (-7) - (-4) كأنها -11 بدلاً من -7 + 4 = -3." },
+          { id: "u1_2", title: "1-2 ضرب الأعداد الصحيحة وقسمتها", f: { q: "احسب: (-6) × (+4)", a: "-24" }, ap: { q: "احسب: (-36) ÷ (-9)", a: "+4" }, ch: { q: "أوجد العدد المجهول: (-5) × [ ___ ] = +45", a: "-9" }, steps: ["تطبيق قاعدة الإشارات (المتشابهة + والمختلفة -)", "إجراء الضرب أو القسمة للأعداد", "التحقق من صحة الإشارة النهائية"], error: "الخطأ الشائع: وضع إشارة سالب عند قسمة عدد سالب على عدد سالب." },
+          { id: "u1_3", title: "1-3 المضاعفات", f: { q: "اكتب أول أربعة مضاعفات للعدد 7.", a: "7 ، 14 ، 21 ، 28" }, ap: { q: "أوجد المضاعف المشترك الأصغر (م.م.أ) للعددين 6 و 8.", a: "24" }, ch: { q: "عدد يقع بين 40 و 60 وهو مضاعف مشترك للعددين 5 و 9 معاً، فما هو؟", a: "45" }, steps: ["سرد مضاعفات العدد الأول بانتظام", "سرد مضاعفات العدد الثاني", "تحديد أصغر مضاعف مشترك بينهما"], error: "الخطأ الشائع: الخلط بين المضاعفات والعوامل." },
+          { id: "u1_4", title: "1-4 العوامل وقابلية القسمة", f: { q: "اكتب جميع عوامل العدد 18.", a: "1 ، 2 ، 3 ، 6 ، 9 ، 18" }, ap: { q: "أوجد العامل المشترك الأكبر (ع.م.أ) للعددين 24 و 36.", a: "12" }, ch: { q: "هل العدد 432 يقبل القسمة على 6؟ فسّر إجابتك.", a: "نعم، لأنه زوجي ومجموع أرقامه 9 يقبل على 3" }, steps: ["كتابة أزواج الضرب المكونة للعدد", "عدم نسيان العدد 1 والعدد نفسه", "اختيار العامل المشترك الأكبر"], error: "الخطأ الشائع: نسيان أحد أزواج العوامل الوسطى أو العدد 1." },
+          { id: "u1_5", title: "1-5 الأعداد الأولية", f: { q: "حوط الأعداد الأولية: 9 ، 11 ، 15 ، 17 ، 21", a: "11 و 17" }, ap: { q: "حلل العدد 30 إلى عوامله الأولية.", a: "2 × 3 × 5" }, ch: { q: "عددان أوليان مجموعهما 24 والفرق بينهما 10، فما هما؟", a: "17 و 7" }, steps: ["فحص قابلية قسمة العدد على 2 و 3 و 5", "استبعاد العدد 1 لأنه ليس أولياً", "التحليل باستخدام شجرة العوامل"], error: "الخطأ الشائع: اعتبار العدد 1 أو العدد 9 أعداداً أولية." },
+          { id: "u1_6", title: "1-6 المربعات والجذور التربيعية", f: { q: "احسب قيمة: 8² و √49", a: "8² = 64  ،  √49 = 7" }, ap: { q: "احسب: √81 + 4²", a: "9 + 16 = 25" }, ch: { q: "مربع مساحته 144 سم²، أوجد محيطه.", a: "طول الضلع = 12 سم، المحيط = 48 سم" }, steps: ["حساب قيمة الجذر التربيعي أولاً", "حساب مربع العدد بضربه في نفسه", "جمع الناتجين بدقة"], error: "الخطأ الشائع: حساب 4² كأنها 4 × 2 = 8 بدلاً من 4 × 4 = 16." }
+        ]
+      },
+      {
+        unit: "الوحدة 2: العبارات الجبرية والمعادلات والصيغ",
+        lessons: [
+          { id: "u2_1", title: "2-1 كتابة العبارات الجبرية", f: { q: "اكتب عبارة جبرية تمثل: عدد س مضافاً إليه 9.", a: "س + 9" }, ap: { q: "عمر أحمد (ص) سنة، اكتب عبارة تمثل ضعف عمره مطروحاً منه 3.", a: "2ص - 3" }, ch: { q: "مستطيل طوله (2ن + 1) وعرضه 5، اكتب عبارة لمحيطه.", a: "4ن + 12" }, steps: ["تحديد الرمز الجبري للمجهول", "ترجمة الكلمات (ضعف، مطروحاً منه) إلى عمليات", "كتابة العبارة دون علامة يساوي"], error: "الخطأ الشائع: عكس ترتيب الطرح كتابة 3 - 2ص بدلاً من 2ص - 3." },
+          { id: "u2_2", title: "2-2 تجميع الحدود المتشابهة", f: { q: "بسّط: 4س + 3س - 2س", a: "5س" }, ap: { q: "بسّط: 5أ + 3ب - 2أ + 4ب", a: "3أ + 7ب" }, ch: { q: "بسّط: 7س² + 4س - 3س² + 2س - 5", a: "4س² + 6س - 5" }, steps: ["تمييز الحدود المتشابهة في الرمز والأس", "جمع أو طرح المعاملات مع إشاراتها", "إبقاء الرموز المختلفة منفصلة"], error: "الخطأ الشائع: جمع 3أ + 7ب لتصبح 10أب." },
+          { id: "u2_3", title: "2-3 فك الأقواس", f: { q: "فك القوس: 3(س + 4)", a: "3س + 12" }, ap: { q: "فك القوس وبسّط: 2(3ص - 5) + 4ص", a: "10ص - 10" }, ch: { q: "فك الأقواس وبسّط: 4(س + 2) - 2(س - 3)", a: "2س + 14" }, steps: ["ضرب المعامل الخارجي في الحد الأول", "ضرب المعامل الخارجي في الحد الثاني مع الإشارة", "تجميع الحدود المتشابهة إن وجدت"], error: "الخطأ الشائع: ضرب العدد الخارجي في الحد الأول فقط ونسيان الحد الثاني." },
+          { id: "u2_4", title: "2-4 استنتاج واستخدام الصيغ", f: { q: "إذا كانت ص = 3س + 2، أوجد ص عندما س = 4.", a: "14" }, ap: { q: "استخدم الصيغة ع = 2ك - 5 لإيجاد ع عندما ك = -3.", a: "-11" }, ch: { q: "اكتب صيغة التكلفة (ت) لشراء (ن) دفتراً بسعر 0.400 ريال مع رسوم 1 ريال.", a: "ت = 0.4ن + 1" }, steps: ["التعويض بقيمة المتغير داخل أقواس", "إجراء الضرب قبل الجمع والطرح", "كتابة الناتج النهائي"], error: "الخطأ الشائع: الجمع قبل الضرب عند التعويض." },
+          { id: "u2_5", title: "2-5 كتابة المعادلات وحلها", f: { q: "حل المعادلة: س + 7 = 15", a: "س = 8" }, ap: { q: "حل المعادلة: 3س - 4 = 17", a: "س = 7" }, ch: { q: "حل المعادلة: 5س + 2 = 3س + 14", a: "س = 6" }, steps: ["نقل الثوابت للطرف الآخر بعكس الإشارة", "تبسيط طرفي المعادلة", "القسمة على معامل المجهول"], error: "الخطأ الشائع: نقل العدد للطرف الآخر دون تغيير إشارته." }
+        ]
+      },
+      {
+        unit: "الوحدة 3: القيمة المكانية والتقريب والترتيب",
+        lessons: [
+          { id: "u3_1", title: "3-1 الضرب والقسمة في 10 و 100 و 1000", f: { q: "احسب: 3.45 × 100", a: "345" }, ap: { q: "احسب: 48.2 ÷ 1000", a: "0.0482" }, ch: { q: "أوجد العدد المفقود: 0.075 × [ ___ ] = 75", a: "1000" }, steps: ["تحديد اتجاه الحركة (يمين للضرب، يسار للقسمة)", "عدّ الأصفار لتحريك الفاصلة", "إضافة أصفار لحفظ المنزلة عند الحاجة"], error: "الخطأ الشائع: تحريك الفاصلة لليمين بدلاً من اليسار عند القسمة." },
+          { id: "u3_2", title: "3-2 مقارنة الأعداد العشرية وترتيبها", f: { q: "ضع علامة (> أو <): 0.45 [ ] 0.5", a: "0.45 < 0.50" }, ap: { q: "رتب تصاعدياً: 3.2 ، 3.09 ، 3.19 ، 3.25", a: "3.09 ، 3.19 ، 3.2 ، 3.25" }, ch: { q: "اكتب عدداً عشرياً يقع في المنتصف بين 2.4 و 2.5.", a: "2.45" }, steps: ["مقارنة الأجزاء الصحيحة أولاً", "مساواة عدد المنازل العشرية بالأصفار", "المقارنة من اليسار لليمين"], error: "الخطأ الشائع: الظن بأن 0.45 أكبر من 0.5 لأن 45 أكبر من 5." },
+          { id: "u3_3", title: "3-3 التقريب لأقرب عدد صحيح ومنزلة عشرية", f: { q: "قرّب العدد 14.68 لأقرب عدد صحيح.", a: "15" }, ap: { q: "قرّب العدد 7.349 لأقرب منزلة عشرية واحدة.", a: "7.3" }, ch: { q: "قرّب العدد 9.996 لأقرب منزلتين عشريتين.", a: "10.00" }, steps: ["تحديد رقم المنزلة المطلوبة", "النظر للرقم الذي يقع يمينها مباشرة", "إضافة 1 إذا كان الرقم 5 فأكثر"], error: "الخطأ الشائع: النظر لآخر رقم في العدد بدلاً من الرقم المجاور للمنزلة." },
+          { id: "u3_4", title: "3-4 جمع الأعداد العشرية وطرحها", f: { q: "احسب: 4.5 + 2.35", a: "6.85" }, ap: { q: "احسب: 10 - 3.64", a: "6.36" }, ch: { q: "اشترى سالم كتاباً بـ 3.750 ريال وقلماً بـ 0.850 ريال، كم تبقى له من 10 ريالات؟", a: "5.400 ريال" }, steps: ["ترتيب الفواصل العشرية رأسياً", "إضافة أصفار لتوحيد المنازل", "إجراء الجمع أو الطرح مع الاستلاف"], error: "الخطأ الشائع: عدم وضع فاصلة وأصفار للعدد الصحيح 10 عند الطرح." },
+          { id: "u3_5", title: "3-5 ضرب الأعداد العشرية", f: { q: "احسب: 0.4 × 6", a: "2.4" }, ap: { q: "احسب: 2.3 × 1.4", a: "3.22" }, ch: { q: "إذا كان 24 × 15 = 360، فما ناتج 0.24 × 1.5؟", a: "0.36" }, steps: ["ضرب الأعداد كأعداد صحيحة بدون فواصل", "جمع عدد المنازل العشرية في العاملين", "وضع الفاصلة في الناتج"], error: "الخطأ الشائع: وضع الفاصلة بعد منزلة واحدة بدلاً من منزلتين في 2.3 × 1.4." },
+          { id: "u3_6", title: "3-6 قسمة الأعداد العشرية", f: { q: "احسب: 8.4 ÷ 4", a: "2.1" }, ap: { q: "احسب: 6.35 ÷ 5", a: "1.27" }, ch: { q: "قُسّم شريط طوله 15.6 متر إلى 6 قطع متساوية، ما طول القطعة الواحدة؟", a: "2.6 متر" }, steps: ["القسمة من اليسار لليمين", "رفع الفاصلة العشرية في الناتج فور الوصول إليها", "إكمال القسمة حتى الباقي صفر"], error: "الخطأ الشائع: نسيان رفع الفاصلة العشرية في ناتج القسمة." }
+        ]
+      },
+      {
+        unit: "الوحدة 4: الطول والكتلة والسعة",
+        lessons: [
+          { id: "u4_1", title: "4-1 التحويل بين وحدات القياس المترية", f: { q: "حوّل 3.5 كم إلى أمتار.", a: "3500 متر" }, ap: { q: "حوّل 450 ملليلتر إلى لترات.", a: "0.45 لتر" }, ch: { q: "رتب الكتل تصاعدياً: 1.2 كغم ، 950 غم ، 0.002 طن", a: "950 غم ، 1.2 كغم ، 0.002 طن" }, steps: ["تحديد معامل التحويل (1000 أو 100)", "الضرب عند التحويل من كبير لصغير والقسمة بالعكس", "توحيد الوحدات قبل المقارنة"], error: "الخطأ الشائع: الضرب في 100 بدلاً من 1000 عند التحويل من كم إلى متر." },
+          { id: "u4_2", title: "4-2 اختيار وحدات القياس المناسبة وتقديرها", f: { q: "ما الوحدة الأنسب لقياس سمك عملة معدنية؟", a: "الملليمتر (مم)" }, ap: { q: "قدّر ارتفاع باب الفصل بالأمتار.", a: "حوالي 2 متر" }, ch: { q: "خزان ماء سعته 2500 لتر، هل يكفي لملء 3000 عبوة سعة كل منها 800 مل؟", a: "نعم يكفي (المطلوب 2400 لتر)" }, steps: ["اختيار الوحدة المترية المناسبة لحجم الشيء", "تقدير القياس منطقياً", "التحويل لوحدة مشتركة لحل المسألة"], error: "الخطأ الشائع: استخدام السنتيمتر للمسافات الطويلة بين المدن." },
+          { id: "u4_3", title: "4-3 قراءة المقاييس والمدرجات", f: { q: "مقياس مقسم بين 0 و 10 إلى 5 أجزاء متساوية، ما قيمة كل شرطة؟", a: "2 وحدة" }, ap: { q: "مقياس مقسم بين 2 و 3 إلى 10 أجزاء، ما القراءة عند الشرطة السابعة بعد 2؟", a: "2.7" }, ch: { q: "مؤشر ميزان في منتصف المسافة بين 1.4 كغم و 1.5 كغم، ما القراءة بالغرام؟", a: "1450 غم" }, steps: ["حساب الفرق بين رقمين رئيسيين", "القسمة على عدد الفراغات بينهما", "قراءة موقع المؤشر بدقة"], error: "الخطأ الشائع: عدّ الشرطات بدلاً من عدّ الفراغات بين الأرقام." }
+        ]
+      },
+      {
+        unit: "الوحدة 5: الزوايا",
+        lessons: [
+          { id: "u5_1", title: "5-1 تسمية الزوايا وتقديرها", f: { q: "ما نوع الزاوية التي قياسها 125°؟", a: "زاوية منفرجة" }, ap: { q: "سمّ الزاوية التي رأسها ب وضلعها ب أ و ب ج بثلاثة أحرف.", a: "الزاوية أ ب ج" }, ch: { q: "كم درجة يدور عقرب الدقائق خلال 20 دقيقة؟", a: "120°" }, steps: ["تحديد رأس الزاوية ووضعه في المنتصف", "تصنيف الزاوية (حادة، قائمة، منفرجة، منعكسة)", "تقدير القياس مقارنة بـ 90° و 180°"], error: "الخطأ الشائع: وضع حرف رأس الزاوية في البداية بدلاً من المنتصف." },
+          { id: "u5_2", title: "5-2 رسم الزوايا وقياسها بالمنقلة", f: { q: "أين نثبت مركز المنقلة عند قياس زاوية؟", a: "على رأس الزاوية تماماً" }, ap: { q: "زاوية منعكسة قياسها 290°، ما قياس الزاوية الحادة المقابلة لها؟", a: "70°" }, ch: { q: "لرسم زاوية منعكسة 240° بالمنقلة، ما الزاوية التي نطرحها من 360°؟", a: "120°" }, steps: ["تثبيت مركز المنقلة على الرأس", "مطابقة خط الصفر مع أحد الضلعين", "القراءة من التدريج الذي يبدأ من الصفر"], error: "الخطأ الشائع: القراءة من التدريج الخاطئ (130° بدلاً من 50°)." },
+          { id: "u5_3", title: "5-3 حساب قياسات الزوايا المجهولة", f: { q: "زاويتان على خط مستقيم إحداهما 65°، أوجد قياس الأخرى.", a: "115°" }, ap: { q: "ثلاث زوايا حول نقطة قياس اثنتين منها 140° و 110°، أوجد الثالثة.", a: "110°" }, ch: { q: "مثلث فيه زاويتان 48° و 72°، أوجد الزاوية الثالثة.", a: "60°" }, steps: ["تحديد القاعدة (180° للمستقيم والمثلث، 360° حول نقطة)", "جمع الزوايا المعلومة", "الطرح من 180° أو 360°"], error: "الخطأ الشائع: الطرح من 360° بدلاً من 180° للزوايا على خط مستقيم." },
+          { id: "u5_4", title: "5-4 حل مسائل الزوايا", f: { q: "زاويتان متقابلتان بالرأس إحداهما 52°، ما قياس الأخرى؟", a: "52°" }, ap: { q: "مثلث متطابق الضلعين زاوية رأسه 40°، أوجد قياس كل من زاويتي القاعدة.", a: "70°" }, ch: { q: "زاويتان على مستقيم قياسهما (2س) و (3س + 30°)، أوجد قيمة س.", a: "30°" }, steps: ["استخدام خواص التقابل بالرأس وتطابق الضلعين", "تكوين معادلة هندسية", "حل المعادلة لإيجاد المجهول"], error: "الخطأ الشائع: نسيان القسمة على 2 عند إيجاد زاويتي القاعدة في المثلث متطابق الضلعين." }
+        ]
+      },
+      {
+        unit: "الوحدة 6: الكسور",
+        lessons: [
+          { id: "u6_1", title: "6-1 تبسيط الكسور والكسور المتكافئة", f: { q: "بسّط الكسر 12/18 لأبسط صورة.", a: "2/3" }, ap: { q: "أكمل الكسر المكافئ: 3/5 = [ ___ ] / 35", a: "21" }, ch: { q: "اكتب العدد الكسري 3 و 4/5 في صورة كسر غير اعتيادي.", a: "19/5" }, steps: ["إيجاد العامل المشترك الأكبر للبسط والمقام", "قسمة البسط والمقام على نفس العدد", "التأكد من عدم وجود اختصار إضافي"], error: "الخطأ الشائع: تبسيط البسط والمقام بقسمتهما على أعداد مختلفة." },
+          { id: "u6_2", title: "6-2 مقارنة الكسور وترتيبها", f: { q: "أيهما أكبر: 3/4 أم 5/8؟", a: "3/4" }, ap: { q: "رتب تصاعدياً: 1/2 ، 2/5 ، 7/10", a: "2/5 ، 1/2 ، 7/10" }, ch: { q: "أوجد كسراً يقع بين 1/3 و 1/2.", a: "5/12" }, steps: ["إيجاد المضاعف المشترك الأصغر للمقامات", "توحيد المقامات بضرب البسط والمقام", "مقارنة البسوط وترتيب الكسور الأصلية"], error: "الخطأ الشائع: مقارنة البسوط مباشرة دون توحيد المقامات." },
+          { id: "u6_3", title: "6-3 جمع الكسور وطرحها", f: { q: "احسب: 2/7 + 3/7", a: "5/7" }, ap: { q: "احسب: 3/4 + 1/6", a: "11/12" }, ch: { q: "احسب: 2 و 1/3 - 1 و 3/4", a: "7/12" }, steps: ["توحيد المقامات أولاً", "جمع أو طرح البسوط فقط", "إبقاء المقام الموحد ثابتاً وتبسيط الناتج"], error: "الخطأ الشائع: جمع المقام مع المقام (مثل 3/4 + 1/6 = 4/10)." },
+          { id: "u6_4", title: "6-4 إيجاد كسر من كمية", f: { q: "احسب: 1/5 من 35 ريالاً.", a: "7 ريالات" }, ap: { q: "احسب: 3/8 من 48 طالباً.", a: "18 طالباً" }, ch: { q: "أنفق خالد 2/5 من راتبه وتبقى معه 360 ريالاً، كم كان راتبه الأصلي؟", a: "600 ريال" }, steps: ["قسمة الكمية الكلية على المقام", "ضرب الناتج في البسط", "كتابة الوحدة المناسبة"], error: "الخطأ الشائع: القسمة على البسط بدلاً من القسمة على المقام." },
+          { id: "u6_5", title: "6-5 إجراء عمليات القسمة مع الباقي", f: { q: "اكتب ناتج 17 ÷ 5 في صورة عدد كسري.", a: "3 و 2/5" }, ap: { q: "وزّع معلم 29 قلماً بالتساوي على 4 طلاب، كم يأخذ كل طالب وكم يتبقى؟", a: "7 أقلام ويتبقى 1" }, ch: { q: "تتسع الحافلة لـ 14 راكباً، كم حافلة نحتاج لنقل 50 راكباً؟", a: "4 حافلات" }, steps: ["إجراء القسمة لإيجاد الناتج الصحيح والباقي", "كتابة الباقي كبسط على المقسوم عليه", "تفسير الباقي حسب سياق المسألة"], error: "الخطأ الشائع: إهمال الباقي في مسائل النقل والحافلات." }
+        ]
+      },
+      {
+        unit: "الوحدة 7: المساحة والمحيط",
+        lessons: [
+          { id: "u7_1", title: "7-1 التحويل بين وحدات المساحة (م² و سم²)", f: { q: "حوّل 3 م² إلى سم².", a: "30,000 سم²" }, ap: { q: "حوّل 45,000 سم² إلى م².", a: "4.5 م²" }, ch: { q: "غرفة مساحتها 18 م²، كم بلاطة مربعة ضلعها 50 سم تلزم لتبليطها؟", a: "72 بلاطة" }, steps: ["تذكر أن 1 م² = 10,000 سم²", "الضرب في 10,000 للتحويل من م² إلى سم²", "القسمة على 10,000 للتحويل العكسي"], error: "الخطأ الشائع: الضرب في 100 بدلاً من 10,000 عند تحويل وحدات المساحة." },
+          { id: "u7_2", title: "7-2 مساحة المستطيل ومحيطه", f: { q: "مستطيل طوله 9 سم وعرضه 4 سم، أوجد مساحته ومحيطه.", a: "المساحة = 36 سم² ، المحيط = 26 سم" }, ap: { q: "مستطيل مساحته 54 سم² وطوله 9 سم، أوجد عرضه ومحيطه.", a: "العرض = 6 سم ، المحيط = 30 سم" }, ch: { q: "مربع ومستطيل لهما نفس المحيط 24 سم، طول المستطيل 8 سم، أيهما أكبر مساحة؟", a: "المربع (36 سم²)" }, steps: ["تطبيق قانون المساحة = الطول × العرض", "تطبيق قانون المحيط = 2 × (الطول + العرض)", "كتابة الوحدة (سم² للمساحة، سم للمحيط)"], error: "الخطأ الشائع: جمع الطول + العرض فقط للمحيط دون الضرب في 2." },
+          { id: "u7_3", title: "7-3 مساحة المثلث", f: { q: "مثلث قاعدته 10 سم وارتفاعه 6 سم، احسب مساحته.", a: "30 سم²" }, ap: { q: "مثلث قائم الزاوية ضلعا القائمة فيه 7 سم و 8 سم، احسب مساحته.", a: "28 سم²" }, ch: { q: "مثلث مساحته 42 سم² وطول قاعدته 12 سم، أوجد ارتفاعه.", a: "7 سم" }, steps: ["تحديد القاعدة والارتفاع العمودي", "ضرب القاعدة × الارتفاع", "القسمة على 2 (الضرب في نصف)"], error: "الخطأ الشائع: نسيان القسمة على 2 في قانون مساحة المثلث." },
+          { id: "u7_4", title: "7-4 مساحة متوازي الأضلاع وشبه المنحرف", f: { q: "متوازي أضلاع قاعدته 11 سم وارتفاعه العمودي 5 سم، احسب مساحته.", a: "55 سم²" }, ap: { q: "شبه منحرف قاعدتاه المتوازيتان 6 سم و 10 سم وارتفاعه 4 سم، احسب مساحته.", a: "32 سم²" }, ch: { q: "متوازي أضلاع مساحته 72 سم² وارتفاعه 8 سم، أوجد طول قاعدته.", a: "9 سم" }, steps: ["استخدام الارتفاع العمودي واستبعاد الضلع المائل", "جمع القاعدتين المتوازيتين في شبه المنحرف", "التعويض وحساب المساحة بدقة"], error: "الخطأ الشائع: ضرب القاعدة في الضلع المائل بدلاً من الارتفاع العمودي." },
+          { id: "u7_5", title: "7-5 مساحة الأشكال المركبة ومحيطها", f: { q: "كيف نحسب مساحة شكل مركب على حرف L؟", a: "نقسمه لمستطيلين ونجمع مساحتيهما" }, ap: { q: "مربع ضلعه 5 سم يعلوه مثلث قاعدته 5 سم وارتفاعه 4 سم، احسب المساحة الكلية.", a: "35 سم²" }, ch: { q: "أرض مستطيلة 12 م × 8 م بداخلها حوض مربع ضلعه 3 م، احسب المساحة المتبقية.", a: "87 م²" }, steps: ["تقسيم الشكل لأشكال هندسية بسيطة", "إيجاد الأطوال المجهولة", "جمع المساحات أو طرح الجزء المقتطع"], error: "الخطأ الشائع: نسيان طرح الأضلاع الداخلية المشتركة عند حساب المحيط." }
+        ]
+      },
+      {
+        unit: "الوحدة 8: النسب المئوية",
+        lessons: [
+          { id: "u8_1", title: "8-1 النسب المئوية البسيطة وتحويلها لكسور", f: { q: "اكتب 25% في صورة كسر اعتيادي بأبسط صورة.", a: "1/4" }, ap: { q: "حوّل الكسر 3/5 إلى نسبة مئوية.", a: "60%" }, ch: { q: "رتب تنازلياً: 0.65 ، 70% ، 3/5", a: "70% ، 0.65 ، 3/5" }, steps: ["كتابة النسبة المئوية كمقامه 100", "التبسيط لأبسط صورة", "تحويل الكسور لنسب مئوية للمقارنة"], error: "الخطأ الشائع: كتابة 3/5 كأنها 35%." },
+          { id: "u8_2", title: "8-2 حساب النسب المئوية من الكميات", f: { q: "احسب 10% من 240 ريالاً.", a: "24 ريالاً" }, ap: { q: "احسب 35% من 200 كغم.", a: "70 كغم" }, ch: { q: "حقيبة سعرها 20 ريالاً عليها خصم 15%، كم يصبح سعرها بعد الخصم؟", a: "17 ريالاً" }, steps: ["إيجاد 10% بالقسمة على 10", "حساب النسبة المطلوبة من 10% و 5%", "طرح مقدار الخصم من السعر الأصلي"], error: "الخطأ الشائع: الاكتفاء بحساب مقدار الخصم (3 ريالات) ونسيان طرحه من السعر." },
+          { id: "u8_3", title: "8-3 مقارنة الكميات باستخدام النسب المئوية", f: { q: "حصل طالب على 18 من 20 في الاختبار، اكتب درجته كنسبة مئوية.", a: "90%" }, ap: { q: "في الصف 30 طالباً غاب منهم 3 طلاب، ما النسبة المئوية للحضور؟", a: "90%" }, ch: { q: "حصل عمر في الرياضيات على 21 من 25، وفي العلوم 32 من 40، أيهما أفضل؟", a: "الرياضيات (84%)" }, steps: ["كتابة الكسر (الجزء ÷ الكل)", "الضرب في 100%", "مقارنة النسب المئوية النهائية"], error: "الخطأ الشائع: قسمة الكل على الجزء (25 ÷ 21) بدلاً من الجزء على الكل." }
+        ]
+      }
+    ];
+
+    const ALL_LESSONS_MAP = {};
+    CAMBRIDGE_TERM1_CURRICULUM.forEach(u => u.lessons.forEach(l => { ALL_LESSONS_MAP[l.id] = { ...l, unit: u.unit }; }));
+
+    function populateAllLessonDropdowns() {
+      const html = CAMBRIDGE_TERM1_CURRICULUM.map(u => `
+        <optgroup label="${u.unit}">
+          ${u.lessons.map(l => `<option value="${l.id}">${l.title}</option>`).join('')}
+        </optgroup>
+      `).join('');
+      document.getElementById('cambridgeLessonSelect').innerHTML = html;
+      document.getElementById('correctorTopicSelect').innerHTML = html;
+    }
+
+    function showToast(msg) {
+      const box = document.getElementById('toastBox');
+      box.textContent = msg;
+      box.classList.remove('hidden');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => box.classList.add('hidden'), 3200);
+    }
+
+    function selectRole(role, btn) {
+      session.role = role;
+      document.querySelectorAll('.role-btn').forEach(b => b.className = "role-btn p-3 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-300 font-bold text-sm text-center");
+      btn.className = "role-btn selected p-3 rounded-xl bg-sky-600/30 border-2 border-sky-400 text-white font-bold text-sm text-center";
+    }
+
+    function selectLoginClass(cls, btn) {
+      session.currentClass = cls;
+      document.querySelectorAll('.lclass-btn').forEach(b => b.className = "lclass-btn p-3 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-300 font-extrabold text-sm");
+      btn.className = "lclass-btn p-3 rounded-xl bg-emerald-600/30 border-2 border-emerald-400 text-white font-extrabold text-sm";
+    }
+
+    function selectMode(mode, btn) {
+      session.mode = mode;
+      document.querySelectorAll('.mode-btn').forEach(b => b.className = "mode-btn p-3 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-300 font-bold text-sm");
+      btn.className = "mode-btn p-3 rounded-xl bg-amber-500/25 border-2 border-amber-400 text-white font-bold text-sm";
+    }
+
+    function enterPlatform() {
+      populateAllLessonDropdowns();
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('mainApp').classList.remove('hidden');
+      document.getElementById('mainApp').classList.add('flex');
+      document.getElementById('roleBadge').textContent = session.role;
+      switchClass(session.currentClass);
+      onLessonChanged();
+      pullFromFirebase(true);
+    }
+
+    function logoutPlatform() {
+      stopLiveCamera();
+      document.getElementById('mainApp').classList.add('hidden');
+      document.getElementById('mainApp').classList.remove('flex');
+      document.getElementById('loginScreen').classList.remove('hidden');
+    }
+
+    function openTab(tabId, btn) {
+      if (tabId !== 'tabCorrector') stopLiveCamera();
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById(tabId).classList.remove('hidden');
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      if (tabId === 'tabRadar') renderRadar();
+      if (tabId === 'tabCambridge') onLessonChanged();
+      if (tabId === 'tabCorrector') { populateCorrectorStudents(); renderHomeworkRubric(); }
+      if (tabId === 'tabKnights') renderKnights();
+    }
+
+    function switchClass(cls) {
+      session.currentClass = cls;
+      document.querySelectorAll('.top-cls-btn').forEach(b => {
+        b.className = b.dataset.cls === cls
+          ? "top-cls-btn px-3 py-1 rounded-lg text-xs font-extrabold bg-emerald-600 text-white"
+          : "top-cls-btn px-3 py-1 rounded-lg text-xs font-extrabold bg-slate-800 text-slate-300";
+      });
+      document.getElementById('activeClassHeader').textContent = cls;
+      document.getElementById('knightsClassLabel').textContent = cls;
+      document.querySelectorAll('.adminClsName').forEach(el => el.textContent = cls);
+      renderStudents();
+      renderRadar();
+      onLessonChanged();
+      populateCorrectorStudents();
+      renderHomeworkRubric();
+      renderKnights();
+    }
+
+    // ==================== مؤقت الحصة ====================
+    let lessonSeconds = 40 * 60;
+    let lessonInterval = null;
+    function updateLessonTimerUI() {
+      const m = String(Math.floor(lessonSeconds / 60)).padStart(2, '0');
+      const s = String(lessonSeconds % 60).padStart(2, '0');
+      document.getElementById('lessonTimerDisplay').textContent = `${m}:${s}`;
+    }
+    function startLessonTimer() {
+      if (lessonInterval) return;
+      showToast('▶️ بدأ مؤقت الحصة (40 دقيقة)');
+      lessonInterval = setInterval(() => {
+        if (lessonSeconds > 0) {
+          lessonSeconds--;
+          updateLessonTimerUI();
+          if (lessonSeconds === 20 * 60) { playBeep(3); showToast('⏰ مضى نصف زمن الحصة (20 دقيقة)'); }
+          if (lessonSeconds === 0) { playBeep(4); showToast('🏁 انتهى وقت الحصة'); clearInterval(lessonInterval); lessonInterval = null; }
+        }
+      }, 1000);
+    }
+    function resetLessonTimer() { clearInterval(lessonInterval); lessonInterval = null; lessonSeconds = 40 * 60; updateLessonTimerUI(); }
+
+    // ==================== الدقيقة المحفزة ====================
+    const MOTIVATION_QUOTES = {
+      first: [
+        { title: "«البداية القوية تصنع حصة استثنائية — جهّز دفترك وقلمك الآن!»", task: "مهمة الدقيقة الأولى: افتح الدفتر، اكتب عنوان الدرس والتاريخ، واستعد لسؤال الإحماء." },
+        { title: "«التركيز في أول 60 ثانية هو مفتاح فهم الدرس كاملاً!»", task: "مهمة الدقيقة الأولى: راجع القاعدة السابقة ذهنياً واستعد للمشاركة الصوتية." }
+      ],
+      last: [
+        { title: "«خاتمة الأبطال: ثبّت ما تعلمته اليوم في ذاكرتك قبل الانصراف!»", task: "مهمة الدقيقة الأخيرة (تذكرة الخروج): اكتب فكرة واحدة تعلمتها اليوم في أسفل الصفحة." },
+        { title: "«الرياضيات ممارسة مستمرة — أحسنتم الأداء والانضباط اليوم!»", task: "مهمة الدقيقة الأخيرة: تأكد من تدوين الواجب المنزلي وترتيب المكان قبل الجرس." }
+      ]
+    };
+    let currentMinuteType = 'first';
+    let quoteIndex = 0;
+    let minSeconds = 60;
+    let minInterval = null;
+
+    function startMinuteTimer(type) {
+      currentMinuteType = type;
+      clearInterval(minInterval);
+      minSeconds = 60;
+      document.getElementById('minuteTimerDisplay').textContent = '01:00';
+      document.getElementById('minutePhaseBadge').textContent = type === 'first' ? '🟢 الدقيقة الأولى نشطة الآن' : '🟡 الدقيقة الأخيرة نشطة الآن';
+      updateMotivationCard();
+      minInterval = setInterval(() => {
+        minSeconds--;
+        const s = String(minSeconds).padStart(2, '0');
+        document.getElementById('minuteTimerDisplay').textContent = `00:${s}`;
+        if (minSeconds <= 0) {
+          clearInterval(minInterval);
+          playBeep(2);
+          showToast('⏱️ انتهت الدقيقة المحفزة!');
+        }
+      }, 1000);
+    }
+    function stopMinuteTimer() { clearInterval(minInterval); }
+    function cycleMotivationQuote() { quoteIndex = (quoteIndex + 1) % 2; updateMotivationCard(); }
+    function updateMotivationCard() {
+      const item = MOTIVATION_QUOTES[currentMinuteType][quoteIndex];
+      document.getElementById('minuteQuoteTitle').textContent = item.title;
+      document.getElementById('minuteTaskDesc').textContent = item.task;
+    }
+
+    function playBeep(times = 2) {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        for (let i = 0; i < times; i++) {
+          const osc = ctx.createOscillator();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(880, ctx.currentTime + i * 0.25);
+          osc.connect(ctx.destination);
+          osc.start(ctx.currentTime + i * 0.25);
+          osc.stop(ctx.currentTime + i * 0.25 + 0.15);
+        }
+      } catch (e) {}
+    }
+
+    // ==================== رادار الفصول ====================
+    function renderRadar() {
+      const grid = document.getElementById('radarRoomsGrid');
+      const analytics = document.getElementById('radarAnalyticsGrid');
+      const classes = ['السابع 6', 'السابع 5', 'السابع 4'];
+
+      grid.innerHTML = classes.map(cls => {
+        const room = sharedData.rooms[cls] || { active: false, teacher: 'شاغر' };
+        const isAct = room.active;
+        return `
+          <div onclick="toggleRoomStatus('${cls}')" class="cursor-pointer p-5 rounded-2xl border-2 transition ${isAct ? 'bg-emerald-950/60 border-emerald-400' : 'bg-rose-950/40 border-rose-500/50'}">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xl font-black text-white">${cls}</span>
+              <span class="px-3 py-1 rounded-full text-xs font-extrabold ${isAct ? 'bg-emerald-500 text-slate-950' : 'bg-rose-500/30 text-rose-200'}">
+                ${isAct ? '🟢 حصة أساسية نشطة' : '🔴 شاغر'}
+              </span>
+            </div>
+            <p class="text-xs text-slate-300">المعلم: <strong class="text-sky-300">${isAct ? room.teacher : 'لا يوجد'}</strong></p>
+            <p class="text-[11px] text-slate-400 mt-2">اضغط لتبديل حالة الفصل فوراً</p>
+          </div>
+        `;
+      }).join('');
+
+      analytics.innerHTML = classes.map(cls => {
+        const list = sharedData.students.filter(s => s.className === cls);
+        const total = list.length;
+        const activeCount = list.filter(s => (s.points || 0) > 0).length;
+        const pct = total ? Math.round((activeCount / total) * 100) : 0;
+        return `
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-700">
+            <div class="flex justify-between items-center mb-2">
+              <span class="font-extrabold text-white">${cls}</span>
+              <span class="text-xs font-bold text-emerald-400">${pct}% تفاعل</span>
+            </div>
+            <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden mb-2">
+              <div class="h-full bg-gradient-to-l from-emerald-400 to-sky-500" style="width:${pct}%"></div>
+            </div>
+            <p class="text-xs text-slate-400">عدد الطلاب: ${total} | المتفاعلون: ${activeCount}</p>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleRoomStatus(cls) {
+      const curr = sharedData.rooms[cls] || { active: false, teacher: 'شاغر' };
+      sharedData.rooms[cls] = { active: !curr.active, teacher: !curr.active ? 'أ. محمد منصور' : 'شاغر' };
+      renderRadar();
+      pushToFirebase(false);
+    }
+
+    // ==================== بطاقات الطلاب والتعرف الصوتي ====================
+    function selectAction(name, pts, btn) {
+      session.selectedAction = name;
+      session.selectedPoints = pts;
+      document.querySelectorAll('.action-pill').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    }
+
+    function renderStudents() {
+      const grid = document.getElementById('studentsGrid');
+      const list = sharedData.students
+        .map((s, idx) => ({ s, idx }))
+        .filter(item => item.s.className === session.currentClass)
+        .sort((a, b) => Number(a.s.num) - Number(b.s.num));
+
+      const activeCount = list.filter(i => (i.s.points || 0) > 0).length;
+      const pct = list.length ? Math.round((activeCount / list.length) * 100) : 0;
+      document.getElementById('classEngagementBadge').textContent = `نسبة التفاعل: ${pct}% (${activeCount}/${list.length})`;
+
+      if (!list.length) {
+        grid.innerHTML = `<div class="col-span-full text-center p-8 text-slate-400 text-sm">لا يوجد طلاب في ${session.currentClass} حالياً.</div>`;
+        return;
+      }
+
+      grid.innerHTML = list.map(({ s, idx }) => {
+        const pts = s.points || 0;
+        const avatar = s.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}&background=1E293B&color=38BDF8&bold=true`;
+        return `
+          <div onclick="applyActionToStudent(${idx})" class="student-card cursor-pointer glass-card p-3 flex flex-col items-center text-center relative border ${s.yellowCard ? 'border-amber-400 bg-amber-950/20' : 'border-slate-700/80 hover:border-sky-400'}">
+            <span class="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-slate-900/90 border border-slate-700 text-[11px] font-black text-sky-300">${s.num}</span>
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded-md ${pts > 0 ? 'bg-emerald-500/25 text-emerald-300 border border-emerald-400/40' : 'bg-slate-800 text-slate-400'} text-xs font-black">${pts} ن</span>
+            <img src="${avatar}" alt="${s.name}" class="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-2 border-sky-400/50 mt-4 mb-2" />
+            <h4 class="font-extrabold text-xs md:text-sm text-white line-clamp-2 leading-snug">${s.name}</h4>
+            <span class="mt-1.5 text-[10px] text-cyan-300 font-semibold">${s.lastBadge || 'جاهز للتفاعل'}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function applyActionToStudent(globalIdx) {
+      const stu = sharedData.students[globalIdx];
+      if (!stu) return;
+      if (!Array.isArray(stu.log)) stu.log = [];
+      if (session.selectedAction === 'تنبيه صامت') {
+        stu.yellowCard = !stu.yellowCard;
+        stu.lastBadge = stu.yellowCard ? '🟨 تنبيه صامت' : 'تم رفع التنبيه';
+        stu.log.push(stu.lastBadge);
+      } else {
+        stu.points = Math.max(0, (stu.points || 0) + session.selectedPoints);
+        stu.lastBadge = `${session.selectedAction} (${session.selectedPoints >= 0 ? '+' : ''}${session.selectedPoints})`;
+        stu.log.push(stu.lastBadge);
+      }
+      renderStudents();
+      onLessonChanged();
+      renderKnights();
+      pushToFirebase(false);
+      showToast(`${stu.name}: ${stu.lastBadge}`);
+    }
+
+    let activeRecognition = null;
+    function stopVoiceRecognition() {
+      if (activeRecognition) {
+        try { activeRecognition.abort(); } catch (e) {}
+        activeRecognition = null;
+      }
+      const stEl = document.getElementById('voiceStatus');
+      if (stEl) stEl.textContent = 'تم إيقاف الاستماع.';
+    }
+
+    function startVoiceRecognition() {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const stEl = document.getElementById('voiceStatus');
+      if (!SR) {
+        if (stEl) stEl.textContent = '❌ المتصفح لا يدعم الصوت (استخدم Google Chrome)';
+        return showToast('التعرف الصوتي يتطلب متصفح Google Chrome');
+      }
+
+      if (activeRecognition) {
+        try { activeRecognition.abort(); } catch (e) {}
+        activeRecognition = null;
+      }
+
+      const rec = new SR();
+      activeRecognition = rec;
+      rec.lang = 'ar-OM';
+      rec.continuous = false;
+      rec.interimResults = false;
+      rec.maxAlternatives = 5;
+
+      const normalizeDigits = (str) => (str || '').replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+
+      const deepClean = (txt) => normalizeDigits(txt || '')
+        .replace(/[\u200B-\u200D\uFEFF]/g, '')
+        .replace(/[أإآٱ]/g, 'ا')
+        .replace(/[ؤئء]/g, '')
+        .replace(/ة/g, 'ه')
+        .replace(/ى/g, 'ي')
+        .replace(/[\u064B-\u065F\u0640]/g, '')
+        .replace(/[^\u0621-\u064A0-9\s]/g, ' ')
+        .replace(/\b(يا|الطالب|طالب|رقم|بن|ابن)\b/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      const phoneticKey = (word) => {
+        let w = deepClean(word);
+        if (/^عمر(و|ون|ان|ا)?$/.test(w) || ['عامر', 'امر', 'امرو'].includes(w)) return 'AMR_GROUP';
+        if (['اياد', 'عياد', 'ياد'].includes(w)) return 'EYAD_GROUP';
+        return w;
+      };
+
+      rec.onstart = () => {
+        if (stEl) stEl.textContent = '🔴 جاري الاستماع الآن... انطق الاسم أو الرقم';
+      };
+
+      rec.onerror = (err) => {
+        activeRecognition = null;
+        if (err.error === 'not-allowed') {
+          if (stEl) stEl.textContent = '⚠️ إذن الميكروفون مرفوض! فعّله من علامة القفل بجانب الرابط';
+          showToast('⚠️ يرجى السماح للموقع باستخدام الميكروفون من إعدادات المتصفح');
+        } else if (err.error === 'no-speech') {
+          if (stEl) stEl.textContent = 'لم يتم التقاط صوت، اضغط الزر وحاول مجدداً';
+        } else {
+          if (stEl) stEl.textContent = 'تنبيه صوتي: ' + err.error;
+        }
+      };
+
+      rec.onend = () => { activeRecognition = null; };
+
+      rec.onresult = (e) => {
+        const alternatives = Array.from(e.results[0]).map(alt => alt.transcript.trim());
+        const primarySpoken = alternatives[0] || '';
+        if (stEl) stEl.textContent = 'تم سماع: ' + alternatives.join(' | ');
+
+        const classList = sharedData.students
+          .map((s, globalIdx) => ({ s, globalIdx }))
+          .filter(item => item.s.className === session.currentClass);
+
+        let matchedIdx = -1;
+
+        for (const rawSpoken of alternatives) {
+          if (matchedIdx !== -1) break;
+          const cleanSpoken = deepClean(rawSpoken);
+          const spokenWords = cleanSpoken.split(' ').filter(Boolean);
+          const spokenKeys = spokenWords.map(phoneticKey);
+
+          let detectedNum = null;
+          const digitMatch = normalizeDigits(rawSpoken).match(/\d+/);
+          if (digitMatch) {
+            detectedNum = parseInt(digitMatch[0], 10);
+          } else {
+            const ones = { 'واحد':1,'احد':1,'اثنين':2,'اثنان':2,'ثلاثه':3,'ثلاث':3,'اربعه':4,'اربع':4,'خمسه':5,'خمس':5,'سته':6,'ست':6,'سبعه':7,'سبع':7,'ثمانيه':8,'ثمان':8,'تسعه':9,'تسع':9 };
+            const tens = { 'عشره':10,'عشر':10,'عشرين':20,'عشرون':20,'ثلاثين':30,'ثلاثون':30,'اربعين':40,'اربعون':40 };
+            let sum = 0, found = false;
+            spokenWords.forEach(w => {
+              const cw = w.replace(/^و/, '');
+              if (ones[cw]) { sum += ones[cw]; found = true; }
+              if (tens[cw]) { sum += tens[cw]; found = true; }
+            });
+            if (found && sum > 0) detectedNum = sum;
+          }
+
+          if (detectedNum !== null) {
+            const byNum = classList.find(item => Number(item.s.num) === detectedNum);
+            if (byNum) { matchedIdx = byNum.globalIdx; break; }
+          }
+
+          const byTwo = classList.find(item => {
+            const parts = deepClean(item.s.name).split(' ').filter(Boolean);
+            if (parts.length < 2) return false;
+            return spokenKeys.includes(phoneticKey(parts[0])) && spokenKeys.includes(phoneticKey(parts[1]));
+          });
+          if (byTwo) { matchedIdx = byTwo.globalIdx; break; }
+
+          const byFirst = classList.find(item => {
+            const stuParts = deepClean(item.s.name).split(' ').filter(Boolean);
+            if (!stuParts.length) return false;
+            return spokenWords.includes(stuParts[0]) || spokenKeys.includes(phoneticKey(stuParts[0]));
+          });
+          if (byFirst) { matchedIdx = byFirst.globalIdx; break; }
+        }
+
+        if (matchedIdx !== -1) applyActionToStudent(matchedIdx);
+        else showToast('لم يُطابق الصوت: ' + primarySpoken);
+      };
+
+      try { rec.start(); } catch (e) { if (stEl) stEl.textContent = 'أعد الضغط على زر الميكروفون للبدء'; }
+    }
+
+    // ==================== سابع كامبردج والبرامج العلاجية ====================
+    function onLessonChanged() {
+      const code = document.getElementById('cambridgeLessonSelect')?.value || 'u1_1';
+      const lesson = ALL_LESSONS_MAP[code] || CAMBRIDGE_TERM1_CURRICULUM[0].lessons[0];
+
+      const container = document.getElementById('differentiatedCards');
+      if (container) {
+        const levels = [
+          { badge: '🌱 مستوى التأسيس', color: 'border-emerald-400 bg-emerald-950/30', titleColor: 'text-emerald-300', data: lesson.f },
+          { badge: '⚡ مستوى التطبيق', color: 'border-sky-400 bg-sky-950/30', titleColor: 'text-sky-300', data: lesson.ap },
+          { badge: '🚀 مستوى التحدي', color: 'border-amber-400 bg-amber-950/30', titleColor: 'text-amber-300', data: lesson.ch }
+        ];
+        container.innerHTML = levels.map(lv => `
+          <div class="p-4 rounded-2xl border-2 ${lv.color} flex flex-col justify-between space-y-3">
+            <div>
+              <span class="inline-block px-2.5 py-0.5 rounded-full bg-slate-900 text-xs font-extrabold ${lv.titleColor} mb-2">${lv.badge}</span>
+              <p class="text-sm md:text-base font-bold text-white leading-relaxed">${lv.data.q}</p>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-700 text-xs text-cyan-300">
+              <strong>الحل النموذجي:</strong> ${lv.data.a}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      const remedialBox = document.getElementById('remedialList');
+      const countBadge = document.getElementById('remedialCountBadge');
+      if (remedialBox) {
+        const classStudents = sharedData.students.filter(s => s.className === session.currentClass);
+        const struggling = classStudents
+          .filter(s => (s.points || 0) <= 1 || s.needsRemedial)
+          .sort((a, b) => (a.points || 0) - (b.points || 0))
+          .slice(0, 8);
+
+        if (countBadge) countBadge.textContent = `${struggling.length} طلاب في المسار العلاجي`;
+
+        if (!struggling.length) {
+          remedialBox.innerHTML = `<div class="col-span-full p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/40 text-xs text-emerald-300 font-bold">🌟 ممتاز! جميع طلاب ${session.currentClass} حققوا مستوى التمكن المطلوب حالياً.</div>`;
+        } else {
+          remedialBox.innerHTML = struggling.map(stu => {
+            const reason = stu.remedialNote || (stu.points === 0 ? 'لم يُرصد تفاعل صفي حتى الآن' : 'نقاط تفاعل منخفضة ويحتاج لتثبيت المهارة');
+            const waText = encodeURIComponent(`السلام عليكم ولي أمر الطالب الفاضل (${stu.name})، نحيطكم علماً بمتابعة ابنكم في مادة الرياضيات (درس: ${lesson.title}). نوصي بتدريبه في المنزل على نشاط التأسيس: (${lesson.f.q}) وحله الصحيح (${lesson.f.a}) لتجنب (${lesson.error}). مع تحيات معلم المادة أ. محمد منصور.`);
+            return `
+              <div class="p-4 rounded-xl bg-slate-900 border border-amber-500/50 space-y-2.5">
+                <div class="flex justify-between items-center">
+                  <span class="font-black text-sm text-white">${stu.num} - ${stu.name}</span>
+                  <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 text-xs font-bold">${stu.points || 0} نقاط</span>
+                </div>
+                <p class="text-xs text-amber-300"><strong>سبب الإحالة للعلاج:</strong> ${reason}</p>
+                <p class="text-xs text-slate-300"><strong>النشاط العلاجي الفوري:</strong> حل سؤال التأسيس (${lesson.f.q}) مع التركيز على: ${lesson.error}</p>
+                <div class="flex gap-2 pt-1">
+                  <a href="https://wa.me/?text=${waText}" target="_blank" class="flex-1 text-center py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold">
+                    📲 إرسال الخطة لولي الأمر (واتساب)
+                  </a>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+    }
+
+    let boardShowAns = true;
+    function openBoardModal() {
+      const code = document.getElementById('cambridgeLessonSelect').value;
+      const lesson = ALL_LESSONS_MAP[code] || CAMBRIDGE_TERM1_CURRICULUM[0].lessons[0];
+      document.getElementById('boardLessonTitle').textContent = `${lesson.unit} — ${lesson.title}`;
+      const levels = [
+        { badge: '🌱 مستوى التأسيس', color: 'border-emerald-400', data: lesson.f },
+        { badge: '⚡ مستوى التطبيق', color: 'border-sky-400', data: lesson.ap },
+        { badge: '🚀 مستوى التحدي', color: 'border-amber-400', data: lesson.ch }
+      ];
+      document.getElementById('boardQuestionsGrid').innerHTML = levels.map(lv => `
+        <div class="p-6 rounded-3xl bg-slate-900 border-2 ${lv.color} flex flex-col justify-between space-y-4">
+          <span class="text-sm font-black text-sky-300">${lv.badge}</span>
+          <p class="text-xl md:text-2xl font-black text-white leading-relaxed">${lv.data.q}</p>
+          <div class="board-ans-box p-4 rounded-2xl bg-emerald-950/60 border border-emerald-400/50 text-base md:text-lg font-extrabold text-emerald-300">
+            الحل: ${lv.data.a}
+          </div>
+        </div>
+      `).join('');
+      document.getElementById('boardModal').classList.remove('hidden');
+    }
+    function closeBoardModal() { document.getElementById('boardModal').classList.add('hidden'); }
+    function toggleBoardAnswers() {
+      boardShowAns = !boardShowAns;
+      document.querySelectorAll('.board-ans-box').forEach(el => el.classList.toggle('hidden', !boardShowAns));
+    }
+
+    // ==================== مصحح الواجب البصري بالكاميرا المحلية (بحد أقصى 5 في النشاط) ====================
+    let activeCameraStream = null;
+    let currentStampSymbol = '✓';
+    let currentStampColor = '#10B981';
+    let batchCorrectedCount = 0;
+
+    async function startLiveCamera() {
+      const video = document.getElementById('liveCameraVideo');
+      const canvas = document.getElementById('capturedNotebookCanvas');
+      const placeholder = document.getElementById('cameraPlaceholder');
+      try {
+        stopLiveCamera();
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment' },
+          audio: false
+        });
+        activeCameraStream = stream;
+        video.srcObject = stream;
+        video.classList.remove('hidden');
+        canvas.classList.add('hidden');
+        placeholder.classList.add('hidden');
+        showToast('📷 الكاميرا المباشرة نشطة الآن — وجّهها لدفتر الطالب');
+      } catch (err) {
+        showToast('⚠️ تعذر تشغيل الكاميرا، تأكد من السماح بإذن الكاميرا في المتصفح');
+      }
+    }
+
+    function captureNotebookFrame() {
+      const video = document.getElementById('liveCameraVideo');
+      const canvas = document.getElementById('capturedNotebookCanvas');
+      if (!activeCameraStream || video.classList.contains('hidden')) {
+        return showToast('شغّل الكاميرا أولاً لتثبيت لقطة الدفتر');
+      }
+      canvas.width = video.videoWidth || 640;
+      canvas.height = video.videoHeight || 480;
+      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+      video.classList.add('hidden');
+      canvas.classList.remove('hidden');
+      showToast('📸 تم تثبيت اللقطة — المس الشاشة لوضع علامات (✓) أو (✗)');
+    }
+
+    function stopLiveCamera() {
+      if (activeCameraStream) {
+        activeCameraStream.getTracks().forEach(t => t.stop());
+        activeCameraStream = null;
+      }
+      const video = document.getElementById('liveCameraVideo');
+      const canvas = document.getElementById('capturedNotebookCanvas');
+      const placeholder = document.getElementById('cameraPlaceholder');
+      if (video) video.classList.add('hidden');
+      if (canvas) canvas.classList.add('hidden');
+      if (placeholder) placeholder.classList.remove('hidden');
+    }
+
+    function setStampTool(symbol, color, btn) {
+      currentStampSymbol = symbol;
+      currentStampColor = color;
+      document.querySelectorAll('.stamp-tool-btn').forEach(b => {
+        b.classList.remove('border-2', 'border-white', 'scale-105');
+      });
+      btn.classList.add('border-2', 'border-white', 'scale-105');
+    }
+
+    function placeStampOnStage(event) {
+      const stage = document.getElementById('visualStage');
+      const layer = document.getElementById('stampsLayer');
+      const rect = stage.getBoundingClientRect();
+      const xPct = ((event.clientX - rect.left) / rect.width) * 100;
+      const yPct = ((event.clientY - rect.top) / rect.height) * 100;
+
+      const mark = document.createElement('div');
+      mark.className = 'stamp-mark font-black text-4xl md:text-5xl';
+      mark.style.left = `${xPct}%`;
+      mark.style.top = `${yPct}%`;
+      mark.style.color = currentStampColor;
+      mark.textContent = currentStampSymbol;
+      layer.appendChild(mark);
+    }
+
+    function undoLastStamp() {
+      const layer = document.getElementById('stampsLayer');
+      if (layer && layer.lastElementChild) layer.removeChild(layer.lastElementChild);
+    }
+
+    function clearAllStamps() {
+      const layer = document.getElementById('stampsLayer');
+      if (layer) layer.innerHTML = '';
+    }
+
+    function resetBatchCounter() {
+      batchCorrectedCount = 0;
+      clearAllStamps();
+      document.getElementById('batchCountText').textContent = '0 / 5';
+      showToast('🔄 تم تصفير عدّاد النشاط لبدء 5 طلاب جدد');
+    }
+
+    function populateCorrectorStudents() {
+      const sel = document.getElementById('correctorStudentSelect');
+      if (!sel) return;
+      const list = sharedData.students
+        .map((s, globalIdx) => ({ s, globalIdx }))
+        .filter(item => item.s.className === session.currentClass)
+        .sort((a, b) => Number(a.s.num) - Number(b.s.num));
+      sel.innerHTML = list.map(({ s, globalIdx }) => `<option value="${globalIdx}">${s.num} - ${s.name}</option>`).join('');
+    }
+
+    function renderHomeworkRubric() {
+      const box = document.getElementById('homeworkRubricBox');
+      if (!box) return;
+      const topicCode = document.getElementById('correctorTopicSelect')?.value || 'u1_1';
+      const lesson = ALL_LESSONS_MAP[topicCode] || CAMBRIDGE_TERM1_CURRICULUM[0].lessons[0];
+      const stuIdx = document.getElementById('correctorStudentSelect')?.value;
+      const stu = sharedData.students[stuIdx];
+
+      box.innerHTML = `
+        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-700 space-y-3">
+          <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+            <div>
+              <span class="text-xs text-slate-400">دفتر الطالب المعروض:</span>
+              <h3 class="font-black text-base text-white">${stu ? stu.num + ' - ' + stu.name : 'اختر طالباً'}</h3>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg bg-purple-500/20 text-purple-300 text-xs font-bold">${lesson.title}</span>
+          </div>
+
+          <div class="p-3 rounded-xl bg-sky-950/40 border border-sky-500/40">
+            <p class="text-xs font-extrabold text-sky-300 mb-1">📝 مسألة النشاط / الواجب:</p>
+            <p class="text-sm font-bold text-white">${lesson.ap.q}</p>
+            <p class="text-xs text-emerald-300 font-bold mt-1.5">✅ الناتج النموذجي: ${lesson.ap.a}</p>
+          </div>
+
+          <div class="p-3 rounded-xl bg-rose-950/30 border border-rose-500/40">
+            <p class="text-xs font-extrabold text-rose-300 mb-1">⚠️ تنبيه للطلاب على الشاشة (الخطأ الشائع):</p>
+            <p class="text-xs text-rose-100">${lesson.error}</p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-900/90 border border-cyan-500/40 flex flex-col justify-between space-y-3">
+          <div class="space-y-2">
+            <p class="text-xs font-black text-cyan-300">☑️ معايير الحل المعروضة أمام الفصل:</p>
+            ${lesson.steps.map((st, i) => `
+              <label class="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-800/80 border border-slate-700 cursor-pointer text-xs text-slate-200">
+                <input type="checkbox" checked class="hw-step-chk w-4 h-4 accent-emerald-500" />
+                <span>الخطوة ${i + 1}: ${st}</span>
+              </label>
+            `).join('')}
+          </div>
+
+          <div class="pt-2 border-t border-slate-800 space-y-2">
+            <p class="text-xs font-bold text-amber-300">اعتماد النتيجة (الحد الأقصى 5 طلاب في النشاط):</p>
+            <div class="grid grid-cols-3 gap-2">
+              <button type="button" onclick="submitHomeworkGrade(2, 'واجب مكتمل وصحيح', false)" class="py-2.5 px-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs">✅ متقن (+2)</button>
+              <button type="button" onclick="submitHomeworkGrade(1, 'خطأ جزئي في الخطوات', true)" class="py-2.5 px-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs">⚠️ جزئي (+1 + علاج)</button>
+              <button type="button" onclick="submitHomeworkGrade(0, 'واجب غير منجز / متعثر', true)" class="py-2.5 px-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-xs">❌ متعثر (إحالة للعلاج)</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function submitHomeworkGrade(pts, statusLabel, needsRemedial) {
+      if (batchCorrectedCount >= 5) {
+        return showToast('⚠️ اكتمل الحد الأقصى (5 طلاب) لهذا النشاط — اضغط «نشاط جديد» للمتابعة');
+      }
+
+      const globalIdx = Number(document.getElementById('correctorStudentSelect').value);
+      const stu = sharedData.students[globalIdx];
+      if (!stu) return showToast('اختر طالباً أولاً');
+      const topicCode = document.getElementById('correctorTopicSelect').value;
+      const lesson = ALL_LESSONS_MAP[topicCode];
+
+      if (!Array.isArray(stu.log)) stu.log = [];
+      stu.points = (stu.points || 0) + pts;
+      stu.lastBadge = `📘 ${statusLabel} (${pts > 0 ? '+' + pts : '0'})`;
+      stu.log.push(stu.lastBadge);
+      stu.needsRemedial = needsRemedial;
+      stu.remedialNote = needsRemedial ? `تعثر في واجب (${lesson.title}) — ${lesson.error}` : '';
+
+      batchCorrectedCount++;
+      document.getElementById('batchCountText').textContent = `${batchCorrectedCount} / 5`;
+      clearAllStamps();
+
+      renderStudents();
+      onLessonChanged();
+      renderKnights();
+      pushToFirebase(false);
+
+      if (batchCorrectedCount === 5) {
+        showToast(`✅ تم رصد ${stu.name} (اكتمل تصحيح 5 طلاب في هذا النشاط)`);
+      } else {
+        showToast(`✅ تم رصد النتيجة للطالب ${stu.name} (${batchCorrectedCount}/5)`);
+      }
+    }
+
+    // ==================== فرسان الرياضيات والشهادات ====================
+    function renderKnights() {
+      const podium = document.getElementById('podiumGrid');
+      if (!podium) return;
+      const top3 = sharedData.students
+        .filter(s => s.className === session.currentClass)
+        .sort((a, b) => (b.points || 0) - (a.points || 0))
+        .slice(0, 3);
+
+      const medals = [
+        { rank: '🥇 المركز الأول', border: 'border-amber-400 bg-amber-950/30', text: 'text-amber-300' },
+        { rank: '🥈 المركز الثاني', border: 'border-slate-300 bg-slate-800/60', text: 'text-slate-200' },
+        { rank: '🥉 المركز الثالث', border: 'border-orange-400 bg-orange-950/30', text: 'text-orange-300' }
+      ];
+
+      podium.innerHTML = top3.map((s, i) => {
+        const avatar = s.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}&background=1E293B&color=FBBF24&bold=true`;
+        return `
+          <div class="p-5 rounded-2xl border-2 ${medals[i].border} flex flex-col items-center space-y-2.5">
+            <span class="font-black text-sm ${medals[i].text}">${medals[i].rank}</span>
+            <img src="${avatar}" class="w-24 h-24 rounded-full object-cover border-4 border-amber-400/70" />
+            <h3 class="font-black text-base text-white">${s.name}</h3>
+            <span class="px-4 py-1 rounded-full bg-amber-500 text-slate-950 font-black text-sm">${s.points || 0} نقطة</span>
+            <button type="button" onclick="openCertificateModal('${s.name.replace(/'/g, '')}', ${s.points || 0})" class="w-full py-2 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-xs shadow">
+              📜 إصدار شهادة تقدير فورية
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openCertificateModal(stuName, pts) {
+      document.getElementById('certStudentName').textContent = stuName;
+      document.getElementById('certClassName').textContent = session.currentClass;
+      document.getElementById('certPoints').textContent = pts;
+      document.getElementById('certDate').textContent = new Date().toLocaleDateString('ar-OM', { year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById('certificateModal').classList.remove('hidden');
+    }
+    function closeCertificateModal() { document.getElementById('certificateModal').classList.add('hidden'); }
+
+    // ==================== استيراد الأسماء والصور والسحابة المتوافقة ====================
+    function importStudentsFromText(replaceAll) {
+      const raw = document.getElementById('excelPasteBox').value.trim();
+      if (!raw) return showToast('الرجاء لصق الأسماء أولاً');
+
+      const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      const parsed = lines.map((line, i) => {
+        const match = line.match(/^(\d+)[\s\-\.\t]+(.+)$/);
+        if (match) return { num: parseInt(match[1], 10), name: match[2].trim(), className: session.currentClass, points: 0, log: [] };
+        return { num: i + 1, name: line, className: session.currentClass, points: 0, log: [] };
+      });
+
+      if (replaceAll) sharedData.students = sharedData.students.filter(s => s.className !== session.currentClass).concat(parsed);
+      else sharedData.students = sharedData.students.concat(parsed);
+
+      document.getElementById('excelPasteBox').value = '';
+      renderStudents();
+      onLessonChanged();
+      pushToFirebase(true);
+    }
+
+    function handlePhotoUpload(event) {
+      const files = Array.from(event.target.files || []);
+      if (!files.length) return;
+      const classStudents = sharedData.students.filter(s => s.className === session.currentClass);
+      const isolated = [];
+      let matchedCount = 0;
+
+      files.forEach(file => {
+        const numMatch = file.name.match(/(\d+)/);
+        if (!numMatch) return;
+        const fileNum = parseInt(numMatch[1], 10);
+        const stu = classStudents.find(s => Number(s.num) === fileNum);
+        if (!stu) { isolated.push(`${file.name} (رقم ${fileNum})`); return; }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const c = document.createElement('canvas');
+            c.width = 140; c.height = 140;
+            c.getContext('2d').drawImage(img, 0, 0, 140, 140);
+            stu.photo = c.toDataURL('image/jpeg', 0.75);
+            matchedCount++;
+            renderStudents();
+            if (matchedCount % 5 === 0) pushToFirebase(false);
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      const isoBox = document.getElementById('isolatedPhotosBox');
+      if (isolated.length) {
+        isoBox.classList.remove('hidden');
+        isoBox.innerHTML = `<strong>⚠️ تم عزل الصور المنقطعة تلقائياً:</strong><br>${isolated.join(' ، ')}`;
+      } else isoBox.classList.add('hidden');
+
+      setTimeout(() => pushToFirebase(true), 1500);
+    }
+
+    async function pushToFirebase(notify = false) {
+      if (!sharedData.students || sharedData.students.length === 0) return;
+      try {
+        const groupedStudents = {};
+        sharedData.students.forEach(s => {
+          const cls = s.className || session.currentClass;
+          if (!groupedStudents[cls]) groupedStudents[cls] = [];
+          groupedStudents[cls].push(s);
+        });
+
+        const payload = {
+          students: groupedStudents,
+          classes: ['السابع 6', 'السابع 5', 'السابع 4'],
+          currentClass: session.currentClass,
+          role: session.role,
+          mode: session.mode,
+          rooms: sharedData.rooms,
+          updatedAt: Date.now()
+        };
+
+        localStorage.setItem('mathpulse_backup', JSON.stringify(sharedData));
+        const res = await fetch(FIREBASE_DB_URL, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (res.ok && notify) showToast('✅ تمت المزامنة الفورية مع السحابة المحمية');
+      } catch (e) {
+        if (notify) showToast('⚠️ تعذر الاتصال بالسحابة، تم الحفظ محلياً');
+      }
+    }
+
+    async function pullFromFirebase(notify = false) {
+      try {
+        const res = await fetch(FIREBASE_DB_URL);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.students) {
+            let loadedStudents = [];
+            if (Array.isArray(data.students)) {
+              loadedStudents = data.students;
+            } else if (typeof data.students === 'object') {
+              Object.keys(data.students).forEach(clsKey => {
+                const clsArr = data.students[clsKey];
+                if (Array.isArray(clsArr)) {
+                  clsArr.forEach(stu => {
+                    if (stu) {
+                      loadedStudents.push({
+                        ...stu,
+                        className: stu.className || clsKey,
+                        num: stu.num || stu.number || stu.id,
+                        photo: stu.photo || stu.img || stu.image || ''
+                      });
+                    }
+                  });
+                }
+              });
+            }
+
+            if (loadedStudents.length > 0) {
+              sharedData.students = loadedStudents;
+              if (data.rooms) sharedData.rooms = data.rooms;
+              localStorage.setItem('mathpulse_backup', JSON.stringify(sharedData));
+              renderStudents();
+              renderRadar();
+              onLessonChanged();
+              renderKnights();
+              populateCorrectorStudents();
+              if (notify) showToast(`✅ تم استرجاع ${loadedStudents.length} طالباً وصورهم بنجاح!`);
+              return;
+            }
+          }
+        }
+      } catch (e) {}
+
+      const local = localStorage.getItem('mathpulse_backup');
+      if (local) {
+        sharedData = JSON.parse(local);
+        renderStudents();
+        onLessonChanged();
+      }
+    }
+
+    function exportExcel() {
+      const classList = sharedData.students
+        .filter(s => s.className === session.currentClass)
+        .sort((a, b) => Number(a.num) - Number(b.num));
+
+      const totalStudents = classList.length;
+      const activeStudents = classList.filter(s => (s.points || 0) > 0).length;
+      const engagementPct = totalStudents ? Math.round((activeStudents / totalStudents) * 100) : 0;
+      const maxPoints = Math.max(1, ...classList.map(s => s.points || 0));
+
+      const lessonSel = document.getElementById('cambridgeLessonSelect');
+      const lessonTitle = lessonSel ? lessonSel.options[lessonSel.selectedIndex].text : 'درس رياضيات - منهج كامبردج';
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('ar-OM', { year: 'numeric', month: 'long', day: 'numeric' });
+      const timeStr = now.toLocaleTimeString('ar-OM', { hour: '2-digit', minute: '2-digit' });
+
+      const praiseMsgs = [
+        "أداء متميز وتفاعل رائع يعكس فهماً عميقاً للدرس، بارك الله فيك.",
+        "فارس من فرسان الرياضيات اليوم؛ سرعة بديهة وانضباط مثالي.",
+        "مشاركة فعّالة وإجابات دقيقة، استمر على هذا التألق.",
+        "جهد مشكور وحضور ذهني لافت طوال دقائق الحصة.",
+        "نموذج مشرف في الالتزام والمبادرة وحل المسائل."
+      ];
+      const mediumMsgs = [
+        "مشاركة طيبة وبداية موفقة، نطمح لمزيد من التفاعل في التحديات القادمة.",
+        "حضور جيد واستجابة إيجابية، واصل الاجتهاد للوصول لقائمة الفرسان.",
+        "تفاعل مقبول؛ لديك قدرات ممتازة ننتظر إبرازها بشكل أكبر."
+      ];
+      const lowMsgs = [
+        "تقصير واضح في التفاعل والمشاركة اليوم، يرجى زيادة التركيز والانتباه.",
+        "لم تُرصد مشاركة كافية خلال الحصة؛ نأمل المبادرة في الحصة القادمة.",
+        "أداء دون المستوى المأمول؛ تحتاج إلى متابعة أدق وحل الأنشطة الصفية.",
+        "غياب التفاعل الصفي اليوم؛ نرجو الاستعداد الجيد وعدم الانشغال."
+      ];
+
+      let csv = '\uFEFF';
+      csv += `"تقرير الحصة التفاعلية — منصة MathPulse AI 3.0"\n`;
+      csv += `"المعلم:","أ. محمد منصور","الشعبة:","${session.currentClass}"\n`;
+      csv += `"عنوان الدرس:","${lessonTitle}","التاريخ والوقت:","${dateStr} - ${timeStr}"\n`;
+      csv += `"إجمالي الطلاب:","${totalStudents}","المتفاعلون:","${activeStudents}","نسبة التفاعل الكلية:","${engagementPct}%"\n\n`;
+      csv += 'الرقم,اسم الطالب,حالة الحضور,إجمالي النقاط,نسبة تفاعل الطالب %,مصدر الدرجات وتفاصيل الأوسمة,التنبيهات السلوكية,التقييم التربوي وملاحظات المعلم\n';
+
+      classList.forEach((s, i) => {
+        const pts = s.points || 0;
+        const stuPct = Math.round((pts / maxPoints) * 100);
+        const logDetails = (Array.isArray(s.log) && s.log.length) ? s.log.join(' | ') : (s.lastBadge || 'لم تُرصد مشاركة');
+        const attendance = (pts > 0 || (Array.isArray(s.log) && s.log.some(x => x.includes('حضور')))) ? 'حاضر' : 'لم يُرصد حضور';
+        const behavior = s.yellowCard ? 'تنبيه أصفر صامت' : 'منضبط';
+
+        let feedback = '';
+        if (pts >= 3) feedback = praiseMsgs[(Number(s.num) + i) % praiseMsgs.length];
+        else if (pts >= 1) feedback = mediumMsgs[(Number(s.num) + i) % mediumMsgs.length];
+        else feedback = lowMsgs[(Number(s.num) + i) % lowMsgs.length];
+
+        csv += `${s.num},"${s.name}","${attendance}",${pts},${stuPct}%,"${logDetails}","${behavior}","${feedback}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `تقرير_حصة_${session.currentClass}_${now.toISOString().slice(0,10)}.csv`;
+      a.click();
+      showToast('📥 تم تصدير تقرير الحصة التفصيلي بنجاح');
+    }
+
+    async function activateNfcReader() {
+      if (!('NDEFReader' in window)) return showToast('📡 قارئ NFC جاهز (مدعوم عبر Chrome على الأندرويد)');
+      try {
+        const ndef = new NDEFReader();
+        await ndef.scan();
+        showToast('📡 قارئ NFC نشط الآن... قرّب بطاقة الطالب');
+        ndef.onreading = (event) => {
+          const decoder = new TextDecoder();
+          for (const record of event.message.records) {
+            const val = decoder.decode(record.data).trim();
+            const num = parseInt(val.replace(/\D/g, ''), 10);
+            if (!isNaN(num)) {
+              const idx = sharedData.students.findIndex(s => s.className === session.currentClass && Number(s.num) === num);
+              if (idx !== -1) applyActionToStudent(idx);
+            }
+          }
+        };
+      } catch (e) {
+        showToast('تأكد من تفعيل NFC في إعدادات الهاتف');
+      }
+    }
+
+    setInterval(() => {
+      if (!document.getElementById('mainApp').classList.contains('hidden')) {
+        pullFromFirebase(false);
+      }
+    }, 4000);
+  </script>
+</body>
+</html>
